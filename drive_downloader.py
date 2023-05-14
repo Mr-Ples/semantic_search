@@ -15,7 +15,12 @@ import constants
 SCOPES = ['https://www.googleapis.com/auth/drive.readonly']
 SERVICE_ACCOUNT_FILE = 'service_creds.json'
 WHITELIST = os.path.join('data', 'whitelist.txt')
-WL_FOLDERS = ["Archive"]
+WL_FOLDERS = [
+    "Archive",
+    "Blacklisted Words - Profanity Filter--1qia8vhRegNAoizOz_rfzJzTCwMuXmnHN",
+    "OUTDATED",
+    "OLD DOCUMENTS"
+]
 
 if not os.path.isfile(WHITELIST):
     open(WHITELIST, 'w+').close()
@@ -25,7 +30,7 @@ def download_documents_from_folder(service, folder_id, folder_path=''):
     query = f"'{folder_id}' in parents"
     results = service.files().list(q=query, fields="nextPageToken, files(id, name, mimeType)").execute()
     items = results.get('files', [])
-    folder_path = "/".join([part.strip() for part in folder_path.split('/')])
+    folder_path = './data/' + "/".join([part.strip() for part in folder_path.split('/')])
     print("folder path:", folder_path)
     os.makedirs(folder_path, exist_ok=True)
     print(items)
@@ -39,7 +44,7 @@ def download_documents_from_folder(service, folder_id, folder_path=''):
             print()
             with open(WHITELIST, 'r') as ye:
                 wls = [line.strip() for line in ye.readlines()]
-            print('wls:', wls)
+            # print('wls:', wls)
             item_id = item['id']
             item_type = item['mimeType']
             if not item_type.startswith('application/vnd.google-apps'):
@@ -52,8 +57,8 @@ def download_documents_from_folder(service, folder_id, folder_path=''):
                 continue
             if item_type == 'application/vnd.google-apps.folder':
                 item_path = item['name'].strip() + '--' + item_id
-                print("Its a folder. Going deeper.")
                 print(f"item_path:", item_path)
+                print("Its a folder. Going deeper.")
                 download_documents_from_folder(service, item_id, folder_path=item_path)
                 continue
 
@@ -64,7 +69,7 @@ def download_documents_from_folder(service, folder_id, folder_path=''):
             print("item_name:", item_name)
             item_path = os.path.join(folder_path, item_name)
             print("item_path:", item_path)
-            if any([wl_folder.lower() in [elem.strip().lower() for elem in item_path.split('/')] for wl_folder in WL_FOLDERS]):
+            if any([any([wl_folder.lower() in elem.strip().lower() for elem in item_path.split('/')]) for wl_folder in WL_FOLDERS]):
                 print('Whitelisted folder')
                 continue
             if os.path.isfile(item_path):
