@@ -122,7 +122,6 @@ def callback():
         return "User not a member of the cos-search project", 403
 
 
-
 if __name__ == '__main__':
     app.run(
         host="0.0.0.0",

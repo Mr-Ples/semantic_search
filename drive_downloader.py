@@ -27,7 +27,7 @@ def download_documents_from_folder(service, folder_id, folder_path=''):
     items = results.get('files', [])
     folder_path = "/".join([part.strip() for part in folder_path.split('/')])
     os.makedirs(folder_path, exist_ok=True)
-
+    print(items)
     if not items:
         print('No files found.')
     else:
@@ -37,20 +37,20 @@ def download_documents_from_folder(service, folder_id, folder_path=''):
                 with open(WHITELIST, 'r') as ye:
                     wl = [line.strip() for line in ye.readlines()]
                 item_id = item['id']
-                print(folder_path)
+                print("folder path:", folder_path)
                 item_name = item['name'].strip() + '--' + item_id
                 item_type = item['mimeType']
-                print(item_type)
+                print("item type:", item_type)
                 item_path = os.path.join(folder_path, item_name)
 
-                print(item_path)
-                if any([wl_folder in folder_path.split('/') for wl_folder in WL_FOLDERS]):
+                print("item_path:", item_path)
+                if any([folder_path in wl_folder for wl_folder in WL_FOLDERS]):
                     print('Whitelisted')
                     continue
                 if os.path.isfile(item_path + '.pdf'):
                     continue
-                print(wl)
-                if item_path + '.pdf' in wl:
+                print("wl:", wl)
+                if item_path + '--' in wl:
                     continue
 
                 # Retrieve file metadata, including file size
@@ -59,7 +59,7 @@ def download_documents_from_folder(service, folder_id, folder_path=''):
 
                 if item_type == 'application/vnd.google-apps.folder':
                     print(f"Folder: {item_path}")
-                    return download_documents_from_folder(service, item_id, folder_path=item_path)
+                    download_documents_from_folder(service, item_id, folder_path=item_path)
 
                 # Check if the file is a Google Docs file
                 if not item_type.startswith('application/vnd.google-apps'):
