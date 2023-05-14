@@ -10,4 +10,4 @@ pkill -9 -f index.py
 sleep 5
 
 # Establish a reverse SSH tunnel
-jprq http 8089
+jprq http 8089 -s "semantic-search"
