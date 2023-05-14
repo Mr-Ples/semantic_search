@@ -1,0 +1,6 @@
+__pycache__
+data/**
+service_creds.json
+.idea
+chroma/**
+*parquet
