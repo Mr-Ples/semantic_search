@@ -1,9 +1,9 @@
 import base64
 import os
-import constants
-
+import traceback
 from functools import wraps
 
+import requests
 from flask import (
     redirect,
     session,
@@ -13,6 +13,7 @@ from flask import (
 )
 from requests_oauthlib import OAuth2Session
 
+import constants
 from semantic_search import main as semantic_search
 
 # from flask_lt import run_with_lt
@@ -95,10 +96,31 @@ def login():
 
 @app.route("/callback")
 def callback():
-    token = oauth.fetch_token(GITLAB_TOKEN_URL, client_secret=GITLAB_CLIENT_SECRET, authorization_response=request.url.replace("http:", "https:"))
-    session['auth_token'] = token
+    try:
+        token = oauth.fetch_token(GITLAB_TOKEN_URL, client_secret=GITLAB_CLIENT_SECRET, authorization_response=request.url.replace("http:", "https:"))
+    except:
+        traceback.print_exc()
+        return redirect("/login")
+
     user_info = oauth.get(GITLAB_USER_INFO_URL).json()
-    return redirect("/")
+
+    # Check if the user is a member of the cos-search project
+    user_id = user_info['id']
+    try:
+        member_response = requests.get(
+            "https://gitlab.com/api/v4/projects/{}/members/{}".format(constants.GITLAB_COS_SEARCH_PROJECT_ID, user_id),
+            headers={'Authorization': 'Bearer ' + token['access_token']}
+        )
+    except:
+        traceback.print_exc()
+        return "User not a member of the cos-search project", 403
+    print(member_response)
+    if member_response.status_code == 200:
+        session['auth_token'] = token
+        return redirect("/")
+    else:
+        return "User not a member of the cos-search project", 403
+
 
 
 if __name__ == '__main__':
