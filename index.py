@@ -25,7 +25,7 @@ GITLAB_CLIENT_ID = os.environ.get("SEMANTIC_SEARCH_APPLICATION_ID")
 print(GITLAB_CLIENT_ID)
 GITLAB_CLIENT_SECRET = os.environ.get("SEMANTIC_SEARCH_APPLICATION_SECRET_KEY")
 print(GITLAB_CLIENT_SECRET)
-GITLAB_REDIRECT_URI = "https://mr-ples.jprq.live/callback"
+GITLAB_REDIRECT_URI = "https://semantic-search.jprq.live/callback"
 GITLAB_AUTHORIZATION_BASE_URL = "https://gitlab.com/oauth/authorize"
 GITLAB_TOKEN_URL = "https://gitlab.com/oauth/token"
 GITLAB_USER_INFO_URL = "https://gitlab.com/api/v4/user"
@@ -89,7 +89,6 @@ def root():
 
 @app.route("/login")
 def login():
-
     authorization_url, state = oauth.authorization_url(GITLAB_AUTHORIZATION_BASE_URL)
     return redirect(authorization_url)
 
@@ -99,7 +98,7 @@ def callback():
     token = oauth.fetch_token(GITLAB_TOKEN_URL, client_secret=GITLAB_CLIENT_SECRET, authorization_response=request.url.replace("http:", "https:"))
     session['auth_token'] = token
     user_info = oauth.get(GITLAB_USER_INFO_URL).json()
-    return render_template("index.html", user_info=user_info)
+    return redirect("/")
 
 
 if __name__ == '__main__':

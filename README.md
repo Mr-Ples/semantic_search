@@ -14,4 +14,4 @@
 - run `chmod +x serve.sh`
 - run `./serve.sh`
 
-visit: https://mr-ples.jprq.live/
+visit: https://semantic-search.jprq.live/
