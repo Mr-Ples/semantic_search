@@ -49,18 +49,22 @@ def main():
     for root, dirs, files in os.walk('./data'):
         for file in files:
             if file.endswith('.pdf'):
+                print(os.path.join(root, file))
                 pdf_files.append(os.path.join(root, file))
 
-    # print(pdf_files)
     for file in pdf_files:
         if len(file.split("--")) > 2:
             print("Likey an exported google doc!")
             try:
-                print(get_file_name(file))
+                full_name = get_file_name(file)
 
-                name = get_file_name(file).split('--')[0]
-                doc_type = get_file_name(file).split('--')[-1]
-                doc_id = get_file_name(file).replace(name + '--', '').replace('--' + doc_type, '')
+                name = full_name.split('--')[0]
+                doc_type = full_name.split('--')[-1].replace(".pdf", "")
+                doc_id = full_name.replace(name + '--', '').replace('--' + full_name.split('--')[-1], '')
+                print("full_name:", full_name)
+                print("name:", name)
+                print("doc_type:", doc_type)
+                print("doc_id:", doc_id)
 
                 header_data = None
                 if doc_type == 'document':

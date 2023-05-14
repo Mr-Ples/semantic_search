@@ -45,7 +45,10 @@ def token_required(f):
     def decorated_function(*args, **kwargs):
         auth_token = session.get('auth_token')
         if auth_token:
-            resp = oauth.get(GITLAB_USER_INFO_URL).json()
+            try:
+                resp = oauth.get(GITLAB_USER_INFO_URL).json()
+            except:
+                return redirect("/login")
             if not isinstance(resp, str):
                 return f(*args, **kwargs)
             return redirect("/login")

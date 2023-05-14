@@ -62,7 +62,7 @@ def download_documents_from_folder(service, folder_id, folder_path=''):
                 download_documents_from_folder(service, item_id, folder_path=item_path)
                 continue
 
-            url_type = '--document' if item_type == 'application/vnd.google-apps.document' else '--spreadsheets'
+            url_type = 'document' if item_type == 'application/vnd.google-apps.document' else 'spreadsheets'
             item_name = item['name'].strip() + '--' + item_id + '--' + url_type + '.pdf'
             print("url_type:", url_type)
             print("item_type:", item_type)
