@@ -14,4 +14,13 @@
 - run `chmod +x serve.sh`
 - run `./serve.sh`
 
+# TODO
+- deal with files too large to be exported
+- add spreadsheet support
+- add more file types
+- add chat bot
+- add upload document on front end + memory of uploaded docs
+- add links to download
+- add website scraping via links to summarize websites
+
 visit: https://semantic-search.jprq.live/
