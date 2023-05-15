@@ -24,9 +24,7 @@ app.secret_key = os.urandom(24)
 
 # Set up GitLab OAuth2 configuration
 GITLAB_CLIENT_ID = os.environ.get("SEMANTIC_SEARCH_APPLICATION_ID")
-print(GITLAB_CLIENT_ID)
 GITLAB_CLIENT_SECRET = os.environ.get("SEMANTIC_SEARCH_APPLICATION_SECRET_KEY")
-print(GITLAB_CLIENT_SECRET)
 GITLAB_REDIRECT_URI = "https://semantic-search.jprq.live/callback"
 GITLAB_AUTHORIZATION_BASE_URL = "https://gitlab.com/oauth/authorize"
 GITLAB_TOKEN_URL = "https://gitlab.com/oauth/token"
