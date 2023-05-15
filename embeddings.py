@@ -103,7 +103,7 @@ def main():
                 print(os.path.join(root, file))
                 pdf_files.append(os.path.join(root, file))
 
-    for file in pdf_files[:1]:
+    for indexx, file in enumerate(pdf_files):
         print()
         doc_id = None
         try:
@@ -120,7 +120,7 @@ def main():
                     name = nameall
 
             if not doc_id:
-                raise SystemExit("=======Couldn't find", file)
+                raise SystemExit("=======Couldn't find", indexx, "", file)
 
             print("full_name:", file)
             print("name:", name)
@@ -159,7 +159,7 @@ def main():
                         for elem in docx_text.split('] '):
                             fulltext  += elem[:-9]
                         fulltext = fulltext.replace("\n", " ").replace('Evaluation Only.', '').replace('Created with Aspose.Words', '').replace('Copyright 2003-2023 Aspose Pty Ltd.', '').replace("Evaluation Mode.", "").replace('Created with an evaluation copy of Aspose.Words.', '').replace('To discover the full versions of our APIs please visit: https://products.aspose.c', '').replace('To discover the full versions of our APIs please visit: https://products.aspose.com/words/', "").strip()
-                        print(fulltext)
+                        # print(fulltext)
                         docx_text = fulltext
                         temp_contest = ""
                         for elem in docx_text.split('] '):
