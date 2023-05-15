@@ -43,15 +43,9 @@ oauth = OAuth2Session(GITLAB_CLIENT_ID, redirect_uri=GITLAB_REDIRECT_URI)
 def token_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        auth_token = session.get('auth_token')
-        if auth_token:
-            resp = oauth.get(GITLAB_USER_INFO_URL).json()
-            if not isinstance(resp, str):
-                return f(*args, **kwargs)
-            return redirect("/login")
-        return redirect("/login")
-
+        return f(*args, **kwargs)
     return decorated_function
+
 
 
 @app.route('/search', methods=['GET', 'POST'])
