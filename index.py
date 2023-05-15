@@ -2,6 +2,7 @@ import base64
 import os
 import traceback
 from functools import wraps
+from urllib.parse import unquote
 
 import requests
 from flask import (
@@ -62,25 +63,20 @@ def token_required(f):
 def search():
     print("search", request.method)
     print(request.__dict__)
-    if not request.query_string:
-        return redirect("/")
-    query = base64.b64decode(request.query_string).decode('ascii')
-    results, doc_results = semantic_search([query])
     print(request.query_string)
-    return render_template('search.html', query=query, results=results, nr_results=len(results), doc_results=doc_results, nr_doc_results=len(doc_results), collections=constants.COLLECTIONS)
-
-
-@app.route('/api', methods=['GET', 'POST'])
-@token_required
-def api():
-    print("api", request.method)
-    print(request.__dict__)
-    if not request.query_string:
-        return redirect("/")
-    query = base64.b64decode(request.query_string).decode('ascii')
-    results, doc_results = semantic_search([query])
-    print(request.query_string)
-    return results
+    query = str(request.query_string.decode('ascii')).split('&')[0]
+    collection = unquote(str(request.query_string.decode('utf-8')).split('&')[-1])
+    query = base64.b64decode(query).decode('ascii')
+    print(query, collection.lower().replace(" ", ''))
+    results, doc_results = semantic_search([query], collection.lower().replace(" ", ''))
+    collect_data = []
+    for collect in constants.COLLECTIONS:
+        print(collect, collection, collection in collect)
+        if collection in collect:
+            collect_data.append((collect, True))
+        else:
+            collect_data.append((collect, False))
+    return render_template('search.html', query=query, results=results, nr_results=len(results), doc_results=doc_results, nr_doc_results=len(doc_results), collections=collect_data)
 
 
 @app.route('/')
