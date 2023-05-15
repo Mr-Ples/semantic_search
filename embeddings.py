@@ -108,14 +108,14 @@ def main():
         doc_id = None
         try:
             name = file.split("/")[-1]
-
+            if name.endswith('(1).pdf'):
+                continue
             doc_type = 'document'
 
             # print(''.join(e for e in name if e.isalnum()))
             for nameall, idall in all:
                 # print(''.join(e for e in nameall if e.isalnum()))
-                temp = name.replace("pdf", '')
-                if ''.join(e for e in nameall if e.isalnum()) == ''.join(e for e in temp if e.isalnum()):
+                if ''.join(e for e in nameall if e.isalnum()).lower() == ''.join(e for e in name if e.isalnum()).replace("pdf", '').lower():
                     doc_id = idall
                     name = nameall
 
@@ -195,11 +195,11 @@ def main():
     model = SentenceTransformer(constants.EMBEDDING_MODEL)
     client.delete_collection('realtalks')
     collection = client.create_collection(name='realtalks', embedding_function=lambda text: model.encode(text))
-    print([elem[1] for elem in embeddings_data])
-    print()
-    print([elem[2] for elem in embeddings_data])
-    print()
-    print([elem[3] for elem in embeddings_data])
+    # print([elem[1] for elem in embeddings_data])
+    # print()
+    # print([elem[2] for elem in embeddings_data])
+    # print()
+    # print([elem[3] for elem in embeddings_data])
     collection.add(
         # embeddings=[elem[0] for elem in embeddings_data],
         documents=[elem[1] for elem in embeddings_data],
