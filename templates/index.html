@@ -35,9 +35,9 @@
                         <ul class="nav nav-pills justify-content-center">
                             {% for collection in collections %}
                             {% if loop.first %}
-                            <li class="nav-item"><a href="#home" data-toggle="tab" aria-expanded="true" class="nav-link active">{{ collection }}</a></li>
+                            <li class="nav-item"><a id="{{ collection }}" href="#home" data-toggle="tab" aria-expanded="true" class="nav-link active">{{ collection }}</a></li>
                             {% else %}
-                            <li class="nav-item"><a href="#home" data-toggle="tab" aria-expanded="false" class="nav-link">{{ collection }}</a></li>
+                            <li class="nav-item"><a id="{{ collection }}" href="#home" data-toggle="tab" aria-expanded="false" class="nav-link">{{ collection }}</a></li>
                             {% endif %}
 
                             {% endfor %}
@@ -56,7 +56,9 @@
                     e.preventDefault();
                     var val = $('#search-input').val();
                     console.log(val);
-                    window.location.href = '/search?' + btoa(val);
+                    var collection = $(".active").attr('id');
+                    console.log(collection);
+                    window.location.href = '/search?' + btoa(val) + '&' + collection;
                     return false;
                   });
                 });

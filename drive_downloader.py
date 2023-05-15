@@ -150,8 +150,9 @@ def get_header_data(doc_id: str):
                 if context == '\n':
                     continue
                 context = ""
-                for i in range(2):
-                    context += "***"
+                for i in range(10):
+                    if i < 2:
+                        context += "***"
                     context += "".join([elem['textRun']['content'] for elem in doc['body']['content'][index + i]['paragraph']['elements']]).strip()
                 if doc['body']['content'][index + 1]['paragraph']['elements'][0]['textRun']['textStyle']:
                     continue
@@ -163,7 +164,16 @@ def get_header_data(doc_id: str):
             except:
                 pass
     return headers
-
+# data  = get_header_data('1-O92HWMo5m63awq44Qf7Dwedu6d0MTiA-B1w4hjm5l8')
+# print(data)
+# print()
+#
+#
+#
+# print()
+# print(context[250:])
+#
+# exit()
 def find_document_id(documentname, drivefolderid = constants.DESIGN_DOCUMENTS_DRIVE_FOLDER_ID):
     credentials = service_account.Credentials.from_service_account_file(
         SERVICE_ACCOUNT_FILE, scopes=SCOPES

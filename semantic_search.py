@@ -7,7 +7,7 @@ from sentence_transformers import SentenceTransformer
 import constants
 
 
-def main(query: List[str]):
+def main(query: List[str], collection: str):
     client = chromadb.Client(
         Settings(
             chroma_db_impl=constants.CHROMA_DB_IMPL,
@@ -15,11 +15,11 @@ def main(query: List[str]):
         )
     )
     model = SentenceTransformer(constants.EMBEDDING_MODEL)
-    collection = client.get_collection(name=constants.COLLECTION_NAME, embedding_function=lambda text: model.encode(text))
+    collection = client.get_collection(name=collection, embedding_function=lambda text: model.encode(text))
     results = collection.query(
         query_texts=query,
         where={"doc_type": "document"},
-        n_results=collection.count()
+        n_results=min(collection.count(), 100)
     )
     datas = {}
     documents = {}
@@ -57,4 +57,5 @@ def main(query: List[str]):
 
 
 if __name__ == "__main__":
-    main(['delete account'])
+    # main(['delete account'], 'docs')
+    main(['test'], 'realtalks')

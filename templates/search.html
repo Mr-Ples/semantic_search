@@ -33,10 +33,10 @@
 
                             <ul class="nav nav-tabs tabs-bordered">
                                 {% for collection in collections %}
-                                {% if loop.first %}
-                                <li class="nav-item"><a href="#home" data-toggle="tab" aria-expanded="true" class="nav-link active">{{ collection }} <span class="badge badge-success ml-1">{{ nr_results }}</span></a></li>
+                                {% if collection[1] == True %}
+                                <li class="nav-item"><a id="{{ collection[0] }}" href="#docs" data-toggle="tab" aria-expanded="true" class="nav-link active">{{ collection[0] }} <span class="badge badge-success ml-1">{{ nr_results }}</span></a></li>
                                 {% else %}
-                                <li class="nav-item"><a href="#docs" data-toggle="tab" aria-expanded="false" class="nav-link">{{ collection }} <span class="badge badge-success ml-1">{{ nr_doc_results }}</span></a></li>
+                                <li class="nav-item"><a id="{{ collection[0] }}" href="#realtalks" data-toggle="tab" aria-expanded="false" class="nav-link">{{ collection[0] }} <span class="badge badge-success ml-1">{{ nr_doc_results }}</span></a></li>
                                 {% endif %}
 
                                 {% endfor %}
@@ -45,7 +45,7 @@
                             </ul>
 
                             <div class="tab-content">
-                                <div class="tab-pane active" id="home">
+                                <div class="tab-pane active" id="docs">
                                     <div class="row">
                                         <div class="col-md">
                                             {% for _, result_data in results.items() %}
@@ -90,8 +90,8 @@
                                 </div>
 
 
-                                <div class="tab-pane" id="docs">
-                                    <h1>Coming Soon</h1>
+                                <div class="tab-pane" id="realtalks">
+                                    <h1>Tap Search</h1>
                                     <!-- {% for _, result_data in doc_results.items() %}
                                     <div class="search-item">
                                         <div class="row">
@@ -122,7 +122,9 @@
                     e.preventDefault();
                     var val = $('#search-input').val();
                     console.log(val);
-                    window.location.href = '/search?' + btoa(val);
+                    var collection = $(".active").attr('id');
+                    console.log(collection);
+                    window.location.href = '/search?' + btoa(val) + '&' + collection;
                     return false;
                   });
                 });

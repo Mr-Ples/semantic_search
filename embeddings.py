@@ -307,29 +307,30 @@ def main():
     print()
     print('Getting document datas')
     embeddings_data = []
-    # # convert docxs to plain text
-    # docx_files = []
-    # # convert docx to pdf
-    # for root, dirs, files in os.walk('./data'):
-    #     for file in files:
-    #         if file.endswith('.docx'):
-    #             print()
-    #             print(file)
-    #             # if os.path.isfile(file.replace(".docx", "").replace(".pdf", "")):
-    #             #     continue
-    #
-    #             doc = aw.Document(os.path.join(root, file))
-    #
-    #             # Remove all comments
-    #             comments = doc.get_child_nodes(NodeType.COMMENT, True)
-    #             comments.clear()
-    #
-    #             # Remove revision marks (edit suggestions)
-    #             doc.accept_all_revisions()
-    #
-    #             doc.save(os.path.join(root, file.replace('.docx', '.pdf')), SaveFormat.PDF)
-    #             # docid = find_document_id(file.replace(".docx", "").replace(".pdf", ""))
-    #             # docx_files.append((os.path.join(root, file.replace('.docx', '.pdf')), docid))
+    # convert docxs to plain text
+    docx_files = []
+    # convert docx to pdf
+    for root, dirs, files in os.walk('./data'):
+        for file in files:
+            if file.endswith('.docx'):
+                print()
+                print(file)
+                if os.path.isfile(os.path.join(root, file.replace(".docx", ".pdf"))):
+                    print('exists')
+                    continue
+
+                doc = aw.Document(os.path.join(root, file))
+
+                # Remove all comments
+                comments = doc.get_child_nodes(NodeType.COMMENT, True)
+                comments.clear()
+
+                # Remove revision marks (edit suggestions)
+                doc.accept_all_revisions()
+
+                doc.save(os.path.join(root, file.replace('.docx', '.pdf')), SaveFormat.PDF)
+                # docid = find_document_id(file.replace(".docx", "").replace(".pdf", ""))
+                # docx_files.append((os.path.join(root, file.replace('.docx', '.pdf')), docid))
 
     pdf_files = []
     for root, dirs, files in os.walk('./data'):
@@ -343,10 +344,12 @@ def main():
                 name = file.split("/")[-1]
                 doc_type = 'document'
                 try:
-                    doc_id = all[name.replace('.pdf', '')]
+                    doc_id = find_document_id(name.replace(".docx", "").replace(".pdf", ""), "1fFNdrhD5ZbkVTb1uX4-tWuDiU-T4odCS")
                 except:
                     traceback.print_exc()
                     continue
+                if not doc_id:
+                    raise Exception("=======Couldn't find", file)
                 print("full_name:", file)
                 print("name:", name)
                 print("doc_type:", doc_type)
@@ -355,6 +358,20 @@ def main():
                 header_data = None
                 if doc_type == 'document':
                     header_data = get_header_data(doc_id)
+                    context = ""
+                    for url, dataz in header_data.items():
+                        if 'linked topics' in dataz['name'].lower():
+                            for line in dataz['context'].split("***")[-1].split("] "):
+                                context += line[:-9] + ", "
+                            break
+                    if not context:
+                        for url, dataz in header_data.items():
+                            if 'transcript' in dataz['name'].lower():
+                                for line in dataz['context'].split("***")[-1].split("] "):
+                                    context += line[:-9] + ", "
+                                    print(line[:-9])
+                        context = context[250:]
+                    print(context)
                 else:
                     continue
 
@@ -363,36 +380,16 @@ def main():
                     for page_num in range(len(docx.pages)):
                         # do all this effort to get the most relevant link
                         link = f'https://docs.google.com/{doc_type}/d/' + doc_id
-                        header = 'Design Document'
-                        context = None
-                        headers = {}
                         if doc_type == 'document':
                             print("num:", page_num + 1)
                             docx_text = docx.pages[page_num].extract_text()
-                            temp_link, context, header = get_page_links(docx_text, header_data)
-                            if temp_link:
-                                link = temp_link
-                            if (not temp_link) and page_num > 0:
-                                # print("Didn't find link!")
-                                # print(docx_text)
-                                for pageindex in range(page_num - 1, -1, -1):
-                                    if pageindex < 0:
-                                        break
-                                    newtext = docx.pages[pageindex].extract_text()
-                                    # print("newnum:", pageindex)
-                                    # print(newtext)
-                                    temp_link, context, header = get_page_links(newtext, header_data)
-                                    if temp_link:
-                                        link = temp_link
-                                        break
-
                         # Generate embedding
                         # embedding = model.encode(docx_text)
                         embedding = []
                         # set metadata
                         metas = {}
                         metas.update(meta)
-                        metas.update({'page_num': page_num + 1, 'header': header if header else 'Design Document', 'link': link, 'context': context.split('***')[-1] if context else ""})
+                        metas.update({'page_num': page_num + 1, 'header': '', 'link': link, 'context': context})
                         # pack chromadb tuple
                         embeddings_data.append((embedding, docx_text, metas, doc_id + '-' + str(page_num + 1)))
                         # print(metas)
@@ -409,9 +406,15 @@ def main():
             persist_directory=constants.CHROMA_PERSIST_DIR
         )
     )
-    client.reset()
+    # client.reset()
     model = SentenceTransformer(constants.EMBEDDING_MODEL)
-    collection = client.create_collection(name=constants.COLLECTION_NAME, embedding_function=lambda text: model.encode(text))
+    client.delete_collection('realtalks')
+    collection = client.create_collection(name='realtalks', embedding_function=lambda text: model.encode(text))
+    print([elem[1] for elem in embeddings_data])
+    print()
+    print([elem[2] for elem in embeddings_data])
+    print()
+    print([elem[3] for elem in embeddings_data])
     collection.add(
         # embeddings=[elem[0] for elem in embeddings_data],
         documents=[elem[1] for elem in embeddings_data],
