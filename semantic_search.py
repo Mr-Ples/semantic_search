@@ -47,6 +47,7 @@ def main(query: List[str]):
         doc_id = idd[:-len('-' + page)]
         print(doc_id)
         print()
+        datasss['metadata']['doc_name'] = datasss['metadata']['doc_name'].replace('.pdf', '')
         print("Name:", datasss['metadata']['doc_name'])
         print("Page:", page)
         print("Url:", datasss['metadata']['link'])
