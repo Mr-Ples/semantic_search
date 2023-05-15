@@ -389,7 +389,7 @@ def main():
                         # set metadata
                         metas = {}
                         metas.update(meta)
-                        metas.update({'page_num': page_num + 1, 'header': '', 'link': link, 'context': context})
+                        metas.update({'page_num': page_num + 1, 'header': 'Page ' + str(page_num + 1), 'link': link, 'context': context})
                         # pack chromadb tuple
                         embeddings_data.append((embedding, docx_text, metas, doc_id + '-' + str(page_num + 1)))
                         # print(metas)
