@@ -15,244 +15,8 @@ from sentence_transformers import SentenceTransformer
 
 import constants
 from drive_downloader import get_header_data, find_document_id
-
-all = {
-'KickStart NFT':'1wuiqnvTUf--h9v6i_3cRGZCAXFYYo-PStfQzQ8utJUQ',
-'Push Notifications':'1-o5xjTwG4w9tD01_2UhyK2adtmgyhGKpwPQErlqziIs',
-'Additional Tools':'12GnetgVgF4Bmum0vh8qgxi7LUJNbGVKm284NbPJMGdE',
-'Control Circles':'1zR0j_fHD8HBU5oC9fx0THAs26rc2yHzrs0XzCGfxqTc',
-'Native':'1rlG0NnUe0HT5u8r2-4WKazTdWLnvn8QNRtycawh1_U0',
-'Share':'1nFKhhYT0e16L1fLXveZvSEUUTIwWLUsVKCRYSTcdk-o',
-'Spellbook':'1lNu-Gk9Ta5ZmogwwhTcUCzF3yhKPsmtatzAeWKyEQ0M',
-'Surveys':'1DlhH5qpX9CPFn-G90sVoC1UzGHEToqVF_CatBR31ddA',
-'Game Guide':'1rISMN9Pi6AlhMkN8w-zcPApi7-h4GEnkz8TkLCK57u8',
-'Tutorial Flow Mockup':'1NnEprNRJUhikoImY0wVUZSZJAoG9dFU8YRzu7UidI0w',
-'Face Swap':'189oA71sTALj6YXA3MnR270Ni6FYZ4IXJfLTZ2Pu4HHQ',
-'Giving Works':'1u2LJ8ZAnIhXtXGTWw76OrGQv4HgRB__4z0wHlRAO4MY',
-'Campaign Map':'1hn7QcmzYtUg1cFdH3kGJz3IW3CKUHLfPsWxS-cSbewA',
-'Summon':'1HDaBnlpR4Mu-ryXb76Q4LgZpRNaqk3EX5OLacZygNqc',
-'Quests':'1Np2Gp76TY8neXCeiMtSU4Gs3cXr_LpVmUA9zUND5a0w',
-'Jackpot':'1oEcC_iRPaH7T0MYk6VAF5ogm5zbkUMfS-SMw5wpExVU',
-'Avatar':'1JEMG9x2a-3usggScArfbE0Yl2LDAqF0-ACi3FkqwFK0',
-'Crypton Mine':'1ObzTWsVdpQ9oPy2oPWlz-i066hMrO1DaLPDqQpDU_4E',
-'Settings':'1uT7GIRrUyR9cQxIIWhhlDrSqa38qWkhlTkgk2rErExY',
-'Black Market':'1GmnRx4sy2B8QwC5y-dweNRu8P9n-FzhfraBrnuNgbeg',
-'Unlock Upgrades':'1nulo13ziWKYOLRQQABegZJv_z-aHoQbR-4GmGxczCbE',
-'Support Building':'1NHmSALsowq6uMB0mClY9zQ2nTBvfL6EvfjBcOt4zqpY',
-'Gem Mine':'1RK4HYZ1rHYutb2IIk66lX0tNpsc8h_3ut8fosAhD3CE',
-'Campaign Tower':'1GVFPivrq9UMHpvsaR34sqCmaN9D2GjWNQNeL98WYahs',
-'Special Deals 2':'1cddk-AKc3ZBHZd2GXKpinFgTfyr5U5F_JQmUV9wrK8c',
-'Marketplace':'1E8FDEuI62skJzS1sPmnpcetG9jh1FrKb8qPh5XNhusM',
-'Special Deals 3':'1qepZ3HOrugwjgeu4XtG6nddPVBpokahCfgMFrlgJ3VU',
-'Copy of Collection':'1X4RK0qIUFuLjSq8ovPyysDr9cmYFCFl9zgz3Q9Dja-k',
-'Special Deals 4':'1QmycA62c0DPcPYslpgecKLRDdqtMcCWpQAxsQVS0ni0',
-'Geopet Go':'1Sdx_J7TqSnRatY-9gqwyGqOMJjPCA2iD7mH6IZVISKs',
-'Mailbox':'1dmhmvWvvHqwHYQ6f1NBtrpe2fS9jaSkpr_Z2AxFXf4A',
-'Special Deals 1':'1oXOSh6G4mBWtq5D4uqfpShSJmsVAmYSsapiOEJfGZdo',
-'Seasonal Challenge':'1-glKAxMPbLULOjw5FGR1QWOg-uS8l9nNocYX-oY0Z8w',
-'Achievements General':'1ZBTjZa-0RlXyk0ESATyu64-gPh_J_Iia04QEgK5moN4',
-'Crypto Land Outdated':'1Of5WsKvEb8Y-pLNCkGFCJ0pukjxx1wsPmtGEQXygBo8',
-'Community':'1YD8IYH1tO50WL-GSfY95tiTW2PDjxhU6YVj-7Wj3Z3o',
-'Auction House':'1vG1ia2MokGgykqBdEj9SU5a5kSvxXOyV8SaaBWJiYgM',
-'PvP Simulations':'1Dlv_Wqxezw78zGUbG7-oAn9cYHp4BSUX9RafsJRa8kM',
-'Collection':'1S3CzIG8Lt9KcysHNUFqy5qHv7LVuIEOuvso4HC2Hmx8',
-'Main Menu':'1V3WYDgSgHhhUjOEFCu9-lR1mTqN5kmD5398DD8UtrmI',
-'Arena':'1a2MNvGcqmIm2dLGCvrNyCGUUWSOEf_0RCc2RPWsG8lY',
-'Shop':'1x2UOudZ5GQcnNWJl3TMHRwA7ZEe0nNuO9hYqVcSu-eg',
-'Trivia':'1iw3JjxrSCiG6flDNw2Fy0jIcCCIyMFYXhEWzi_DeXPM',
-'Pet Guardian Building':'1gnpXwMQzM7ukiBK1gd6WE4_65oA6BQxsa_pzwt_eIP0',
-'Villain Challenge':'1BfarolL6DuxzQwONXvXHhK7yfeJPuqkSYRRZ0h1ljZE',
-'Achievements Building':'1fuYhnlKIFHDtdij2Ow7XWjnBKizsrw_5-hTa_8EOw_E',
-'Community Browse':'1JmEtMHX23QVl8n1rWXuhsNuNdyp1Ma6QR_kasSGiyzI',
-'Idle Boss':'1h_KpOv2tn6NnGgRSjuHAEIHib8YwjrwhHp3usIUBR-M',
-'Mini TTTT Challenge':'11vigNDme7SMOv2hB4woYxtY_9TfZmudoddP91ZiVXr0',
-'Treats':'1IAnqARVEZDPGFEWbjjdU1h39EzhCu2NLt9roH--ZmIQ',
-'Upgrade Building Pets':'17ahg4kpu7mUythakUrab-Td0z_3UjgNzsWxdnFFPOVg',
-'Stories Post Types':'1kdO6i3Iee4_gUWgWy3uXOy6JJ18lnAGw-UcPByRbpxg',
-'Stories Twitter':'1VFcrdw8hljti0gcTf5aIDS4ylFQi756QY_Ts4VRTvjs',
-'Stories Threads':'12YpTJUMbWnCX14LBZgHuxGlJo5DoV3KD__7_Ar9S9zI',
-'Stories Forum':'1EV-NDxb_XenUQY65cKeIOIubznutr7DHuLy3_K5Xrrc',
-'Table of Building Pets':'1sYy_fN8V-ZVaUOhGBReUppUv6B6x0Uqc6Pr6ntarl6Y',
-'Customize':'1ZItOhrR6EXTWdV1iCg4rtawyXXoDDNCFREFAQnxwHdA',
-'Match3 Game Board':'15WkyIO49Hvbo7VGQwmLxnrTybvEzIFtDGOn3U86NK24',
-'Match3 LevelCreator':'1v3fMpbAshKWWvSwc_LsvhsvjUDsb1sIwd6ptTDQSGEc',
-'Match3 Player Created Levels':'1x8ORjx4MoWpmxi4dGHdEriGLxRq2eorQTK6cMKZiDT0',
-'Match3 SelectionScreen':'14-ES5ftHdOove9kY-kXZZTWGt2e0qMzLNU3WX33VKKM',
-'Match3 GameRules':'1iDNn8l5czIbjDP6HHRsP0pZtD9w-yyhQqizYfayVfrA',
-'Chat Whispers':'1_75h7a3lzlBUPOJgxEV4b0ICudAmhetaeEjGLI0coBQ',
-'Automated Whispers':'1k1spfTvYe5OsSJ8KY9YChSt82ve8HXB-9cJ8nkSNL_0',
-'Chat Voice':'1vM21lTCPKzjmTkl3k1ks2b5egfRVSOcvZ1fVzp2TkGc',
-'Chat Text':'1ru-QSPOaPklPKTxSaWUW9LHnlLHaaIX2dxSoNauwYkk',
-'Chat General':'1Xf0zDiGhb09pM512XGGUVhFtuSyKdpoVsrK79-5hNzo',
-'Chat Servers':'15faytzoWHKzzPC7QtOo3y3PeTJ3fiPUE-c7ocqyeGts',
-'Chat Media':'19l5AKrRX2SYZrPY2ST_TvQyz-2t4hw8AglIe68wRGaM',
-'Chat Notifications':'1xTOYTTpE0AB8OX-zIXedA8g0fPUHu7PZxAnMzF2FxBQ',
-'Poker':'1Rmi2OsB9EVMQxlP9fMJSFHdebJrsXaf5BLNDRr5clQk',
-'Bingo':'1wd3xkcOxh9TJkcoe6yyccvXca2SzoVZrJ1kp1l1q13M',
-'Table Games':'1C-b4QWiKDCQSbbQMqYXMTiLyIl3ZSJPWno4IeaAV5Fc',
-'Blackjack':'1Y05Dezg5H4oszZ6fDXjCzrqZo8MpJtXN6kcpVC9WjHw',
-'Roulette':'1gkLo-P8pvh1DavGIy__4loNynrSKGgfgr44xKvMzB1c',
-'Bootcamp':'173oeBLpifp5dgIRhzZgmVBjcF1pgltbu5ZAXt-eO3_4',
-'Blockchain General':'1e2cbzEKXH0gjd0wZPRQflIf686AjiTkPpG8A3-uAcvM',
-'Crypto Land Lore':'15e00LJFpcO_WqlzBwBw5KliAUclElwXlhA5dNkA8Kts',
-'Blockchain CryptoAH':'1DKWoZFXJWR5at3G2ZMXoYQzEglDzdTaa7HUMAvDdyuk',
-'Crypto Land':'1r9uhnQyQ15yA0VuJTDhnCO27BLbz5_cHFT-KNLgyOdI',
-'Blockchain CryptoActions':'1pRewgJ7nDKl13Yz5W1efVGbVU5HNAif4usezxWul03I',
-'Live Streaming':'1u1Feq7YorwwQFScFhweYlGgNonoPdRSN484-wDFBCtA',
-'Table of Go Live Alert Toggles':'1vSLNwyY2NRfRbIrlMtoaGF0Lb3r-QzWZ7wZ8zmUSVrA',
-'Go Live':'1pAR0uUbHssfCc3asLVmjZJ-qZHKOyXAvWyS2GOtg-j4',
-'Replay Book':'1Btq5EtyWEN97VjD8pTmAnNBIvx14K8oYKvBggVEKuZ8',
-'Replays':'148oAW2Ogosk5OCP2J2o9xtIVrpgeS2c-cm11eSrxokQ',
-'Changes to the book (only chapter 9)':'1ATO9cNwcKNI3zteW8a13eiXUxe4LZ-ehQ-K9SQ67Y_Y',
-'Church':'1TcIHo3hkkrYmR40jUvtXOKPrxVVVlXKQv3CBQZpcNRs',
-'church the real book':'1oMj3iGOBtBCXRrZloeCiBpQ8lC6HkgbhJ95Y3DPgUbI',
-'Weekly Events':'1L9co2LqK4TBMK9NFWaxOBcG06OqyterVek1c1ZXQHQ8',
-'Special Events':'1AuWg82LE-t6ZMqnEqQmA2VSy_3zdHdU7WB9ImvP4BuU',
-'Permissions':'14kHn3xtIZvMjxd-9Lq4vHwdsg5QsZYaPmaAhgIG3xGs',
-'Admin Client Custom Mails':'1iOpDEpSpaxkfYEeUKl8T9obdLw5s3GTk8X-7eO3LqE0',
-'Admin Client Moderation':'1aNERxc7F1jAiTvDXiWDRySFa_M4jxVIV5GvBP2Up4b8',
-'Admin Client Profiles':'1qXyQVe-vJafftWAqD2cNe-rGHTWnm3yY5R4BjNSptZI',
-'Admin Client Log History':'1-gTNJC6D1qsEfm9r9YFLUGzRNozu8XZd0-Ji3UO7gno',
-'Admin Client Calendar':'16nT77D82Ul_B_ExFitiKU33Sd-rmh7OrOJw1WSwqxW4',
-'Admin Client Tabs':'1M1lq-E_8Fly93TziQRHOQVSl6iGceNO8acNSN_93Sh4',
-'Admin Client General':'1AF-G-IKWSQ_QSFwUaLu_xIpBuNXGEIYt8IFYwY01oy8',
-'Pets Post Launch':'1eVEVOFcrbzKmAGnITsQ9OnTqINBDmaUPh4rzEtXP7Bg',
-'Push Notification POST LAUNCH':'1fFgLcT0xBIOKcoYkkUQzD9sP8zCZoJm-nMlEIOskH2s',
-'Chat Media Post Launch':'1tJEB9xfDEBxPvNWGBpWCIhznZwm0_kYLj5GCLF7Y6bk',
-'Settings Post Launch':'1bAFEO4ccfanPohdolOyu7mqYh1dhl-1kprQ1r06FWaI',
-'Garrison Post Launch':'1tydin0KJAoXzQq5Kh7hRXBgnK0w96RcihrXngR_xoEs',
-'Share Post Launch':'1swrhXiqY6Zi3SrWIH0uwkg6fznLW63lLKLKFqUsmfX0',
-'Community Post Launch':'1IHt0q4AOunFPbRpfhH2CFgNwP66G4Syq7XX5MzVsmTM',
-'Game Guide Post Launch':'104gIU6wxRyoYL2pbHff8NDO8DuWe7xnVmv8AOaM1hno',
-'Congrats General Post Launch':'1etW8bKR7tmxUD2eSBPju2oPBDTHjnjXCdzJiuMwRm0Q',
-'Native Post Launch':'1IpuskOHL7xzfVaxaxFlzVy2nlcyVA1cS5m2CdlAIzZY',
-'Stories Post Launch':'124hBRLl0EvXCu7ZfUH6TihcqYHambbpYr6CnVOXrpFU',
-'Marketplace Post Launch':'1G2ZpKA3vluCH0goDqNW6MHNMk-M4O5UgduW3doOeo-0',
-'EventQueue Post Launch':'1V1yfwETYwaBhdsICduCe-b4evpR5AK4nywhscEUpYpk',
-'Replay Book Post Launch':'1lgpsAdBG_4h_Y-dOv30HPkWnl4yRiFxQBdvIG8DZ3-E',
-'Challenges Post Launch':'1GSKFe3_qih2xbzVvWfp6iKdTmsg4JPfhs3jYbNtYHC4',
-'Future Post Launch':'1g6n-66MVRhtqRw4CwsuC-FueKbN8APoP_n7P-oo1AAg',
-'Special Deals 3 Post Launch':'1VUVierY1kt3B00mpw9biIp-FhtxnPB68wa_dMA5510g',
-'Modals Post Launch':'1cUgQxe1rkAOquoa_7HDNJLhmUos4K45jJMkoLSsOmHg',
-'Auction House Post Launch':'1we8MHLL2qUlW4E6Flnt2_DqgOW6I9qlnafpOJ-0HtmQ',
-'Raid Post Launch':'1hDewimpJY__c8HQPgSzOV8P_H5KDZXEb-yvPyin9ig8',
-'Stories Forum Post Launch':'1iGgsV0h_M7-PdvKBnd9pU_5ojjeXvAlaJFtqiUkTPeE',
-'Chat General Post Launch':'1nsvQzmHjVPaAqfShPk_HaEOuwB6G5d4sk12PzQht8tU',
-'Community Browse Post Launch':'1SPIsmWECmTgXgC2DtoI_hFpzuWmYbB3E1RRpXI2885A',
-'Special Deals 2 Post Launch':'1ufetnXuc5BFCbYhobpFMHD5rP8c6FZFYeWgdbomMTfI',
-'Chat Text Post Launch':'1c1vKb9m__wLMU8Oljm2UAdrhJfYNDnV8v3y9L4mHvhY',
-'Weekly Events Post Launch':'1ceCyo2JRCYby5nlNDIF5dLaPSBXsS-dyxJufm3A9Bgc',
-'Avatar Post Launch':'13DgyDwYGDkY-sZezMXwl1_RGO5JHhc00W5TdJxNUbIc',
-'Chat Servers Post Launch':'1Quids2HyoxCiy6nCNpRQGBdXZrSM5c5yx_fe0UvjnWM',
-'Chat Voice Post Launch':'190aq3rYA6c3mLHZhrcGUTbY2jeewJfx2Mbx5Rs3omKY',
-'Mailbox Post Launch':'1_R5oA51ywB1d1HqFrRVcK8IflauX7K3LeBPX53GMtBU',
-'Spellbook Post Launch':'1aA4S3_Gav9TJcQmj0gY4cGV9cy_dfoheDVmO6wXZ0Fw',
-'Collectibles Post Launch':'1FvejVsQR8nqm6UjZ-GGzugi8iqGh11oRL-Jyacq9NUI',
-'Campaign Post Launch':'1_ieJTcnK6OIW97y6bch0oQK13BQPnBj9sjNwyOCWZoo',
-'Skins Post Launch':'1HrxJyx4blckJ_aF-ttzX_yFToYz9TPjR0mFHo1GSBmA',
-'Media Player Post Launch':'1cqpgfgFcDalVlEAaqv62cCpXWnixZiUGFeZVi7SKJng',
-'Stories Twitter Post Launch':'1TNPQtbdtYkl5l_xquA0ivKpS44NQpD6pXiz7Z0GsIcQ',
-'Replays Post Launch':'1Hzz697L9yY1ga6pQPWfs6hD5ptBXZBTagnhAtEMCoz0',
-'Stories Post Types Post Launch':'1zLs0GUrdDOPuUiMOP302ChPF6aHOmyMNAsTu5kuXT9Y',
-'Daily Quests Post-Launch':'1QHGsCFwKHecc6XV8rMUxwQeh773uGyQNHRYZroex60g',
-'Special Deals 1 Post Launch':'1E-1cp3rLaDvmb35sc7kgZ-mlaFJdKPUEeKNUmmZDsp4',
-'Content Pieces Post Launch':'1rZ2_Kla0Jc0JkkxDS1dVIdx3CSuiCZxH-HBLZ6bk6lg',
-'General Events':'1oQ6PuPeZpN1OOqN1UjJvtGCLcFQz9sZNOe8N69TEvzk',
-'Chat Notifications Post Launch':'17OD4Txyz9G-zKF0pv0u-U0Lzp25-CgmysezFizbtJAA',
-'Collection Post Launch':'13p99UerPjX09z6h2rOGOCS1rv2j7JX4rl5NWYz8U9Po',
-'Accounts Post Launch':'1zrJKsSVBv0kB0h-oZY9LDo-ZU5BEXESkB7qqipnmkrc',
-'Video Guides Post Launch':'1EGzJZX9E3LyKA7nlz_iXYdLK2umUA6rwJ8h1FoU9t0w',
-'Go Live Post Launch':'1O0WT1NxgY7lnEaetfvNX10PYy3UnUwMXH6T4IbJcyhg',
-'Table of Fighting Backgrounds':'1-n63jpa5pM85L2Z_fRA70jUFut0h_lA3FcpG7zKDB64',
-'Tutorial Audience Retention Design Test (delete me)':'1TZFb345xaTqQ-bl_JitJa8rnpj7kXYnt8odCDTVhp5w',
-'generic lore sentences':'1LD6sVlghSTaiAsSdP9qtPK0otdpk2c4DSRNEPH9wRRQ',
-'BETA Outdated':'1og3Q_RvwN7bDU5IZ3vs6lMGXVmUYpSV0ud11jMtbKcA',
-'Prefab list':'1LXmgJvp_PpvjYj4v_FoHUn8lLRe2Ew96TIR_vWhy690',
-'Smart Buy Achievement Progress Bars':'1oezTKEAgVBmtkGfdKitnBSi8RJfIKPpnhKClkkICnxo',
-'Push Notification Brainstorm':'18aLEsWuIZj6eh9fwF7NPJANpQKBIwdBhT9cNXXOZO2s',
-'Test':'1VxpAvSHeNz-2MrImh6MburztOlyG7Xw4KS-GD_BCBTs',
-'CoS FAQ':'1gejiB0V1l2ixm17CMwpRu5pXXu76-9-yYUG3XiwMmho',
-'Copy of Test':'1L6_3CjUw0YOagO49XsjyY40yhOOU7EHWxR46hlYVgrI',
-'Bidstack':'1W_A2qfQVLo20AMMvcNE0Q0c5jGbXXgjCKidbOz2aGT8',
-'iOS Resolution Center Replies':'1NcviSgV6AIqE9_VxAJPvV-C5ewb3dbI5ud3EhuAsV-o',
-'Writer Templates':'1T5rkh9QF3CmAQ1NnDSZNJdNwy1FNUEI3fYi-mEC6TN4',
-'Pin Game':'19GUWZPPHybAxXVkUPcF_yddXS80jp5H-n_gnFYx9TkQ',
-'BETA':'1FKpymHpu6zpzOuFFRm-xNteEmIDNf0qWl_yAGjg-NX8',
-'QA Video Guidelines':'1gCsW-BWYC1T5SWpAJrAXGvk4trgUm8ES7-s18Jwu4tE',
-'Subscriptions':'1cTIe1lsosqzFm6PmZQEmUJY9HA_JKxn2Ktz3v408YIg',
-'Sale Points':'1Wn0_eZ-fnV2ovO3FKKVQkz4ao2vn99OlPSuPNdnz3ro',
-'Presents':'1brUpF44emFCldn7JdCY5yfglZlZILMtUy1s91MVrezM',
-'Consumables':'1U9zajt3iWMSzTRVu1A6s2fBz-fUNzmsxTXk1X_u6cbs',
-'G4G Shop Limit Texts':'1SB-D-U54MHJCh99rsnZFWeZnQ3sB_lUnArTvEGQ7-2k',
-'Topup':'11QF2M5x9oDPgwqRktyf_IoiRg0zN52qGBNrjzqDKFvc',
-'Purchases':'1HUfVmcvegzCDggNIUqbhbRMH55kmDVDQUbdcA1K9zx0',
-'SocialLogin':'1R6d56Um2AiiiZ27-3jIKM4AtHUMF4omB-RsGzFDlXdI',
-'Accounts':'1eGbgzJYn2x2I07wDLgLFxxaZYYPJ6lvCnx1LZiBUESU',
-'Trust':'11kKxD5AJk8SxkG1RqmKqajTTB6VlJYHlO29A-1Sh8_c',
-'Security':'1d--PalXkfsYWtksoSsYZl3PW9rZQtC5AM53oYiqphlg',
-'Data':'1Cgzx5C1ERYC-Eo_LTmQ2QRYH7WSE6S8FySXKKPh8lxQ',
-'App Store Connect - App Events':'1hVxW7_qGQGlBDaGA5HnFLRCLZm2ZCsA-DweUU4EgFRc',
-'MoMi Whispers Retention':'1Y-vcLHHw6Fgw-GKsRPfEmlIxNboV6O3Sm5Y58YRXcwg',
-'Automated Messages':'1Ypqer1SVjC0B-s1cjM7qF_s32NMYte-Ft1dP3ii1sbc',
-'G4G Shop Purchases':'1hhd97hzw0VC2UMRUtIELPCr91_3V3FzCq6S4D-dS0OA',
-'G4G Shop Pages':'1bIZNvIwTo2Dh2tZAXXsacHkuZPrRLCX1nQfpJ0s1_UE',
-'G4G - CoS BETA Features':'1qXG97W095Xolx-1Z3BzCaJ95MA7MZsN17ajjgKntdCs',
-'G4G Shop Checkout':'1-x8QNgwtkD0QPAtisCF06kjxTsqYHq2TbaqkhgO7RTI',
-'G4G General':'1lacFb4yDLWKmxLD-V3px5WS8sMvV-_1gGsof6R6QOgY',
-'G4G CoS Integration Dashboard':'1dQMmKUn-lZMWPqXFhr6WVI3mGA5X-sytfF98idvr1pM',
-'Faction Stars':'1C8BTRJ0xtiSZX2kCnEXyYj4YASofvRc9DAOJKEaIsFg',
-'Loot Cards':'1h6DO5_Kd7hkd7yw2sNx_qHFxrQsS71rF9hao-fwm6D8',
-'Stickers':'1athLvuSL3rGMMm-xSa_Ue--RTKFsWbNHOZjcovl6Fj0',
-'Pets':'1RGF5th6ff9gH30L87UUgRLD2gxkvnvJ4qBGFplX0ImA',
-'Collectibles':'19MELcTfYWrr9FbVjxkH6LS8heIPml8BXClDPJin09CQ',
-'Pets Categorized By Evolution':'1mK708n7TOBUjygdg-mbv8VeiQ0SqHzszxVs1EvwXSAY',
-'Skins':'1xIZGyz6akoyUgP72pvCiX_HBGUET06EcgT-fKxQHxSA',
-'Heroes':'1rhve2TaHirJXC4FbtWg_bR7d0r_-ARckh67S9ayOyrU',
-'Guidelines for Face Approval':'1qWesA0-i-1tYOC4XkZns0oremiOWVQmdDBFhsFpcodw',
-'YouTube Integration':'1zaAs8uz98QTEcY5GS5mjYdGQNfiBFpZ49v5dF8PNGlw',
-'General Info':'1ZtTxL1ImwnsztuzdaDgRwn10yyCnqlho-vnLTGrAPiI',
-'Lore':'1f_Yjduzv3xFtCsXnFUJToRdHuY81Gvolb4Bd--VRc_w',
-'Catchup Luck':'1nM6BXFWQHs93Fa2wrgiRJuwLN3ae4S1B5SW7Y9Phqeo',
-'Roads':'1AIeHt3Q3HlwHGpc0AMqsraoxg33-5bjFp66MfkeSJVU',
-'Future':'1BA3weYSZ6WlBHLsIOmELtQSHC-jzb87tESSpEdnWON8',
-'Content Pieces':'1Qs78YcB7Gybop0daMKDt-y9lzJz8_3WH-sKk6mtFzyY',
-'Visit':'1ZiRjxwGgquan7dKFcxdvXJ8ghbMel_28teCiBQM-4no',
-'EventQueue':'1bQA_ru2dH7kuLvmdQBPWF3V9oAHOIu6iJorH0XYMzLo',
-'Challenges':'1D1SC9u8NS2YUFtlK0HNTjIONsP13QZJqTUafpnAozBM',
-'Mini Alerts':'12mMYZtil63fVETqhFzxEjJ5u-KBoStRh7R22MOS5HxY',
-'Gift Crypton':'1Dc4h2Gcz8Kjj7HeovPgrGnBaB2putdktWbwrcf-_O7Y',
-'Lists':'1qe9QCqUZ6BhhsAwpjTT9qG9xoQxaY2rsa8_CnmTZMGY',
-'Game Startup Document':'1MN3xDFNqojeNjxcUKISpCrwTiuPdZUo0TVPb82uI4HI',
-'Selfie OUTDATED':'14jQarB7vddDRTElAST7ySvkvWHzOT_ly9uzqOWsGpZg',
-'Input':'1_wQrAl3pSHnHTR8s32fEqeG3BuRFLUzF6ZZU_qtteg8',
-'Media Player':'1yHrrt5jYPKERe9rBzt37j5axKI8zgtGdNffH9x9AXNg',
-'Merge':'1JGMYkReRqGsdlEB6wP4rfUbMpb54OUhhgc3fo-6FiHk',
-'Players':'1ir_s8t_0osx9kKHxBBwvINdVRWS4gwUOCvMTQeqUq5w',
-'Top Bar':'1daWFN2e12jXeH-eLhRFsxIluf0oFRsAWGBifi1ALUb8',
-'Visuals':'1goDGIfBWoEKKDXNK7-VlCazdYf-8d9Vf5HPG4FjSuDo',
-'Opensea NFT Flavor texts':'1DewacI-NTxxdptVsB9E7J3r0sXjInzomb-YFXtY9wDw',
-'State Priority API':'1YwlWIGgPbVEPZ1zflriZDITiV9LhEHqSuRPMpwY3A3o',
-'Banner Messages':'1x6A4-o2yP-tugoDIDvH47N4OYh5I0H2fEHOqdypZVBg',
-'Fighting':'1lbp2VGYA5lI8oft_HNp5TU5uelozqnpxsCgnZQnWFXM',
-'Selfie':'1aD4nMROlLaMI04xnT8Ei2vRfCWZP8GjAdhFBWRf25WE',
-'Hidden Secrets':'1i_XX988s080k6AFcvzlzXNzFOBZJO2iQva4UvlZ_eBA',
-'MiniGame Tutorial':'1FLZp_DHN7o5QEyqBnWeP_LeBKZav4ElzgcX4-sig9Nc',
-'Tutorial Sequences (delete me)':'1flPBcduFyHUV51rn46HitqTnUvaGu0nRY0xGuq37toM',
-'Mission Sequences':'1hPZNn7son2TqQEJIIgX0Tp6QL9dCOCbRvICQ9jr7uV0',
-'Other Leaderboards':'1X13RdPiJv34o_piS7bb6V67fxv0tjRqWzLvfblNZVD0',
-'Division Leaderboards':'1TQriDfQ5b8dmaM5Ue3s7QY4i7VMDofIzwAkC9mLHdVs',
-'Table of Division Badges':'15oqP_hIg0fMVITzlrkQCbJsT-9gt4ZQR_ksNFdh2pY8',
-'General Leaderboards':'1ypjqG9FOqsNG8zq5rMJLtHhoqqDP-60UlSzX2UBGK8s',
-'Congrats General':'1ooLuhbrKvW04md3nRv6q8C4bogMVljtCaRMIo2NVNsE',
-'Reward Panels':'122S-3pnDNoGHfTQgxl-tbB_7yhFhbnC7u1xbuiRpKt4',
-'Forced Prompts':'1HBRwDeho6dcDIDpX85VNe4a8tGNkNFw6ctHy6z05hnI',
-'Modals':'1hMA36tmuOxEu5uMhIREpvIFi7YTxkdlhFw5NydqjTDc',
-'Congrats 1':'1__gLc9PW0tpqnecZcvbhntCCgmMYPSk7KR8PAwLgEpE',
-'Popups':'13GzXbhAFwG4Kfz8sY4eo-uZZJl-9d_Wt-Rk0XrC3LWs',
-'Congrats Events':'1MDgwZ1uolf27i1KHbV8P6-56MUyGYP8FxDox8Im39RY',
-'Congrats 2':'1-FzgktsrnyeZwwBfNMnSVpyFpbS-p1IaqlDK78sjiHs',
-'Congrats Purchases':'11QYi9qhOhajJR8W_DW8skkG-04Q34VL1HtjcIs8fa-o',
-'Test2':'1SWiQm-O8MSJZJz7Sa1EsIOBj6Jl0clNNyTw-dawaEQs'}
+import re
+all = [('Logic Is Not A Lie (Podcast #64)', '1zjZ9OZCSElAIQSLKfPgxN8AkrbxSd0qBKLa7DcjWhqs'), ('People act based on their wiring, its just that simple', '1hRMi2tU2XPV9tUVb4UOsmHnuUB9vas7QtVXp3VRcC7Q'), ('People act based on their wiring, its just that simple', '1HrydCxKFvZMlGfdq7EOXK9Awwh9VC1jHs6_T73LjQ-Y'), ('Athene Real Talk Archive #2', '15L-Uvqmr5HBc3A8tndRo4i4ayl6j5cPX7oEzkXNvWgE'), ("'Choose to not amplify the thoughts & emotions that involve you.' (Podcast #113)", '1yIKJbUAzVFJGeOYbm6q7Q7eZrAaVxcpztmqB1hN-gH4'), ('Being Selfish (Podcast #59)', '15hRGTGtCREDEoAgDGS6XkjDSPvVrXeEpDmOMOfU9UTU'), ('Life Story & Low Self Worth (Podcast #58)', '1JOKfFlLfdp49xxTE0qtzOq8CizAnjgoAk0KYjzgi53A'), ('Guided Meditation Step 3', '1vlu6Jt8nqu2oZUYesprcz3GYDC8ca6PiOhNTb5NPpnE'), ('Guided Meditation Step 2', '1iYLqp-4ck0RxUrPT5LVQS7EDUcjCr1TnI3tmDGdkjW8'), ('Guided Meditation Step 1', '1UScixys2qZ6RraqLzTk37JESqSFxLZ6q2uq04xC0wao'), ('Emotional Intelligence, Religion & Accepting Reality (Podcast #57)', '1LA0rZAWPi77qzKaN2_2yOLW-hnk3KXdLpzKxOor0spU'), ('Living for Your Parents Approval (Podcast #56)', '1bSEOAVmB8kuwfQgbjke4ea-eWCspcw28wlMTtHSwE08'), ('Identity & Changing Habits (Podcast #55)', '1R7SyoKz0Cfc77Dy5niO3MNEr0lqGQNBgCSLeXJR9h6E'), ('Skype Calls with Clickers #1', '1goqw35u2NLnW7XZkc-mvdmSNvGYcQU5cr4mn0U2YsoM'), ('Low Self Esteem (Podcast #54)', '1kN7JpDF5QzhcDOW1imsKmneltARrdPslO01dYf8CGrE'), ('Believe in Logic! (Podcast #53)', '15DnpuuTQ45v2gQSvDRRK2rmhZjiaSZQXie6qsLcDtNA'), ('Athene Real talk Podcast #8', '1hHtuK8Fwc5hiVSO1sd5qEKAiwZO-p--GI5bHybVcQt4'), ('Athene Real Talk Podcast #6', '1SPNyFtaNM5IW6Ty1sl7IKWf095LgO0fJId2I_eLftmk'), ('Aproval Seeking vs. Validation Seeking (Podcast 61)', '1P9nJRUEYyqHvaPqacYVueoEBEIPSdrvYMdmhMkzBvoU'), ('Athene Real Talk Archive #5', '1urhWzPxVa6XlCj87nJVzPhB2AbuWMprq4NR95qWh-cY'), ('Athene Real Talk Podcast #11', '1Z7Fpney0x9SbXSmC2KTO5gwOU5i2ccevYLVzoRBQpnE'), ('A Theory Of Everything Or A Psychological Revolution (Podcast 62)', '1SQ3Vgcfb1_go_Qs2ih0oHfFuz0WdDrogWtlyHJ6r8Z4'), ('Aligning Your Self Image With What You Truly Are (Podcast #63)', '1VLeO6MRlw3fHiByx3ZICz3bINnFaJuSPv1wNZ4FO0BM'), ('Athene Real Talk Podcast #1', '1_Gx2pa2BLYWm4IqA5jQOaMG55l-gLW7vxJEIZy_CMSY'), ('Athene Real Talk Archive #1', '1VnJOlhBn6ib_PWBR7yEKUAE_bH3pDpJYQqVGggp3zH4'), ('Athene Real Talk Archive #3', '1LmIdR-4dx_YrQv1gDAOkCxsMeKJNNJXJYoeh8gscmUo'), ('Athene Real Talk Archive #4', '1xdYEaJLayQfXCQPizZwl463E3LHewUPu4BpdlOv2y-Q'), ('Athene Real Talk Podcast#16', '1icK0nITxdVhLOEiRyQSRheiqm8vDt_c3W4anBxWNckY'), ('Motives Part 1 (Podcast #120)', '1f8lN2IDI95IyCWnSzO9PlHv9eyWQtST0_Y4V4S3OQyo'), ('Athene Real Talk Podcast #4', '1kWjRV8Gj48yXoZsJwvPcunLCr38YDY5XIyL-zKnuCI4'), ('Motives Part 2 (Podcast #121)', '1w28RQOnaJYhh0ZoPCqDYes9m4vPXafB-pRmxjhORWKU'), ('Athene Real Talk Podcast#21', '16JqFTpVvPJbbFUpGnCEw6AoDUNfKkiAxDOWbrkIcNaE'), ('Stas Talks About His Click (Podcast #65)', '1Gb8fnoFoRMpROHT_K5_KXTpWL6cMXHEJmbo9EleQbgM'), ('Athene Real Talk Podcast #5', '1F6hU8EGYM5aCRkMpkqBHkDPHCviWiq2Aqw_jZJVASs0'), ('CogniProjection Part 1 (Podcast #124)', '1Vc7__04mFAH8vUaAuq7nS15Y0h9YjghOuCw6NfDWby4'), ('Athene Real Talk Podcast#22', '1ECdnbdTwml0jNXqujzniYAGdNPmsFyZ0xk3aW_hhLRg'), ('Athene Real Talk Podcast #26', '1Wk0yBJUaX4GGT9wACokuscnTfS0hONvsdIqbHpvu-Zc'), ('You Are a Slave to Your Emotional Core (Podcast #66) (CONFRONTATIONAL)', '1ZbY6Rbgj7jMMn8oQ3gX1CryQDfFZY4Z64wm6mvD-QmY'), ('Cogni  Projection Pt 2 (Podcast #125)', '1u-TJvsN-OReQAYur1qyoWbln4TDPrd4Em-QOt_I81lg'), ('Athene Real Talk Podcast#24', '1cjto-Y_5o6c53lRsxaJwFEciQtQzVBq5PrQ-NRmf4tY'), ('Athene Real Talk Podcast #27', '1-O92HWMo5m63awq44Qf7Dwedu6d0MTiA-B1w4hjm5l8'), ('When I Walk, I Walk With Logic (Podcast #67)', '1ldEJ5t7RMJhMGF8A_vGldCPGf-1bRuspdD1tYm2iknc'), ('Athene Real Talk Podcast#19', '1M-Y8UQTkxrpWQzFvIjkI7MA65sZOlGHzIi1VXZM5cpg'), ('Athene Real talk podcast #9', '1cajI7roBQ0m4WBCCDGtVEQ29bXgksqF2yTmvj7ZiQfo'), ('Athene Real Talk Podcast #28', '1Fc0heUOqVIcjpt76R1tVD2OpLZf2QpWTHP9aQPDFgEI'), ('Riccardo & His Click + A Reddit Testimony (Podcast #68)', '15Wua9dSEdW_lnoFzjcWYgok-0vUA3Fa_R1WHFmAi6kY'), ('A New Way Of Clicking & Patterns and Consciousness (Podcast #69)', '1ib9bvmftSKLliqukyI9HyD3CxWU_Fzi-aREyXjdpLHU'), ('Athene Real talk Podcast #7', '10t2a4Q-cS0mCf6h8e3aUCbUsKMwg4qtv4-tM_kFkON8'), ('Athene Real Talk Podcast#20', '1iKXFcjOmNCTyMXnm3pdpxNjFo21PHPTXkkeMd5T_eD4'), ('The Intersubjective Reality Defines The Comfort You Feel (Podcast #70)', '1XE2LzR2s1eY0j_Aa1sc-N17st8PBrDMGdqKILUO5Ioo'), ('Athene Real Talk Podcast#17', '1iIauYx56YtdjvXPvH1ua-DrVNhkLSndYQoa_pZyjsEI'), ('Athene Real Talk Podcast #13', '13HJPxwONfyQ_Kv6ZmRydHL3dY4u9FvqaPF7OgkFJtAU'), ('Why I Act Like I Act On Stream (Podcast #71)', '17k_uYhcF87OyosawcUwwbknhcMdJGgYi7ajmwuUXUy0'), ('Athene Real Talk Podcast #3', '1B-gSAlOnOE47WJZkq8o0lP2hW9jz1Nmt0tmqsFhnAeM'), ('Athene Real Talk Podcast#23', '1OczUGIXbbvLCKy7gywjD0Uc2O1f2chPLnuma0Eu6RBM'), ('Experience Is Just A Tool, Not The Goal (Podcast #72)', '10s2p87mSZlAN7AU2AEEWYR7oqvvAGR0yJxr1d5fg6Fs'), ('Athene Real Talk Podcast #12', '1_-qKf88BTka04_9r8GnEvTIFhdcXjBbTsqiRk55B7LY'), ('Athene Real Talk Podcast#18', '1Wc8hkmlpEUVJakw6Kr0A_cWRFa5f2PHoaSRflJ8r6po'), ("Don't Have Other People Tell You What To Believe (Podcast #73)", '1NAvszlP9k36lx6cH9cGeaspVir4zDTR4mMvUDaeI4lo'), ('Athene Real talk podcast #10', '1_zgqh2XXSyMKcR92ZeO0IO1Sy63OFQ-LSCjj5EmofQg'), ('Testimony Real Talk Podcast #1', '1i8urZvW3-SvpQ-qyT35VnIcOeuQzXa8gqK4O0By-QSM'), ('Athene Real Talk Podcast#15', '1cXzMLQ7B46aXXctiBCSpH0gCJFbQyyKXho2HORt5N5g'), ('Athene Real Talk Podcast #25', '1lBNd6GNTYnFZg3q_bzM5T_v9XesIBnsGiSjhF4fBFLk'), ('Athene Real Talk Podcast#14', '1OWOlnoCd6s5iI2fRUIfy_OSnGFa0r6HqnzPMN3nCt6s'), ('Stop Lying To Yourself! Podcast #74', '1uBowKwCcZy8CkpCU_vwVD0kv3G7X02UH60Jq-vm9Xfs'), ('Athene Real Talk Podcast #2', '1CrbzbuERETEhf4lCEq6W-vpihGuTC-E3Wwvm9VhFJHM'), ('The Click 2.0 (Podcast #132)', '1OLdHMOqQT77vvHYfiYuLFK5oHnJR-6aw9g9CkQ0VGyM'), ('Athene Real Talk Podcast #44', '1K2fzVACcPjF__h0ufESHHT6Bl4EAv1BNgTUH3ZjKN9A'), ('Most Confrontational Real Talk Ever (Podcast #75)', '13r1DAmrpC6VOMEVYcze69cnn-KIOgzYj1fEp80XBgeE'), ('What Is Consciousness (Podcast #76)', '1FNgF0QXLgMFP0WoNbw0eCANO6i7Svzi73P2VQT-ISNg'), ('Athene Real Talk Archive #6', '1fShFK_EIzF1BSighsGod-RdY_I1yftRtAcQpRsWGH2Y'), ('Logic Is Inductive & Growing Up With Fake Rewards (Podcast #78)', '1lSC3goxCSWdrLq8x-Yo0h1-XvWeYqmqLcewYsv9OPFM'), ('Athene Real Talk Podcast #30', '1ySfbHmQ8xmyE9uT-0qQzaYrJZ_C3bBHaPP-OYgdnQqE'), ('Athene Real Talk Podcast #45', '18Z3bpd6nsrokPKbGrbPDnvBK0ez6n8S_S49Jj5S-xrc'), ("'Your drive for comfort was your drive for logic all along.' (Podcast #79)", '1eozZMe-gh5Xo0ShUssfRBQSn_x95abokYOtYEyUReUg'), ('Think for Yourself (Podcast #46)', '1gDXHHU7GVgjoMctHBCBIpyhkLAeQNqXh5j4c-9TtNKY'), ('The Click, Start To Finish (Podcast #80)', '14YGad4J6dDRjBnmAiIHKUf3cIMkLRpff1lpOmkcAIJc'), ('Performative Contradiction (Podcast #81)', '1jKtSIAkRiahZC1-0UArwRupDso8iAWgT7hjZq_FZcy8'), ('Self Image VS True Self (Podcast #47)', '1h8kejuNLSV30o4QyR0NEhVRxeHp8WHpJ1tKvL9wQ_lA'), ('You Have Never Been Taught To Live For Something (Podcast #83)', '12u4Dcdoxnn8WOcQ963jIVMU1gSGm-Znm6UoDfHG8pMw'), ('Reality Check (Podcast #49)', '1oC6Pm-_t2rLbt_ZtP8VDNwnxRbqEjR8DQ1KoFb51Ifs'), ('Reese Talks About Probabilities (Podcast #84)', '14dUHhZcdHpwPxkqnCvfn4GY_aLq0-yK6ENitTl0ALKY'), ("Critical thinking and question 'Comfort' as a core value (Podcast #50)", '1i_ecffhLg3ERS_NWo2n2ZKNEEK-uAmb-YU_xRLut9yI'), ("'With thinking in probabilities, you don't care anymore about being right or wrong.' (Podcast #86)", '1lKvSfcROkrq86Xj2-5CiTreNIl8o3WGkhoeqheQb4F4'), ('Athene Real Talk Podcast #38', '1WVT2Yxo7lvb6AcBAujUxSqP-FFIpFppgIv3YFYzaN8E'), ('You are all idiots (Podcast #51)', '1wpLtxU5aC5_yzwjgOT8Nx5JN5vkk9WEq2X0UbQ666lw'), ('Athene Real Talk Podcast #39', '1o-MW1Wtm0pTfkVLE8ypZRL8T0AKlBOfUlZ3tyhhvIOQ'), ('Athene Talks About His Ideas And Way Of Thinking (Podcast #87)', '1DXJITVfKLPVOpp54oK_AKHBedharutKZun7fLhHq0LI'), ("'People just don't want to change.' (Podcast #89)", '16ajzIqvtbF73U9xNsHnE5mnUJjmfYGMCWxY0Fhffv28'), ('Athene Real Talk Podcast #40', '1jzWA7P6-Esxu2sf_jSzHMW3jYQeIT_Hj4C2Cdc8Y_ig'), ('What Drives You (Podcast #52)', '10T_9SqNpBynam9dV2_0vaHEL-uIWARlLHj2PKUReqQ8'), ('Athene Real Talk Podcast #41', '1Ee1046VEh0WjjK-fdtfq2WSWJj3GCa2u7EMB99gmLD8'), ('Athene Real Talk Podcast #42', '11TccGlds4uV2tMzu9aBMJpHR5o6Qd895vI6q6HnGUUI'), ('Athene Real Talk Podcast #43', '11WWSXLWcwNmAJtX1HPcl9zcex5EQHkISV3TCl1SBc2w'), ("'ActionReaction is omnipresent.' (Podcast #101)", '1ItfwhZvIg3uiw6fCLjEcDf1Kd1cqyXFjZH4_YOeRF84'), ("'You are so conditioned to just trust your environment.' (Podcast #99)", '1kdjurLlkT3JYcW_4QHwiZaiKJvPA0vXE4oKX2Q_O-4Q'), ("'The Experience Of Choice Is Screwing You Over' (Real Talk Podcast #95)", '1Vs-WggNybdZPrk4V_TdwmDoGcoidxlKbCFTdOFm6PSE'), ("'People always give away their authority.' (Podcast #176)", '1R_mccdadD9HU8gP-5Al2_s840zbsXEIjHp-CVX1W-Js'), ("'You Do Not Get To Choose What Your Goal Is' (Real Talk Podcast #95)", '1DaqW49Q3oJYe-myOYWifpk07818elTWqEoNJbcJn9K4'), ("'Valuing change is important.' (Podcast #93)", '1AjE9thUzUbbJZKfnWLSBh92e4BKv79GBE-43oqMQ-Kg'), ("'Learning is merely a tool to help you take action.' (Podcast #174)", '1eyjhlegtoRuQhB10Iiwr4z0IX1zQX2ddjWY-KE3sT5M'), ("'I don't allow myself to make it about myself).' (Podcast #175)", '1PkyZfQDYg47SIMLgKxwpX_nUc2yHX6r7sO1BjMplvGM'), ('Afterlife, Quantum Immortality And Cognitive Dissonance (Podcast #172)', '1CRXhKJj7XSl92gUAkciiLiF_67hgOomA433Wp5QzQuc'), ("'You'd rather hate your life than change it.' (Podcast #91)", '1sc1M4zFLI_mKMdxSsq8D4yzHhVXDhWGN7iiO89wcCX4'), ("'At the end of the day, I just wanna do as much good as I can.'(Podcast #173)", '1bx8CIwsRQTQy1C8zdXpfmdrV8UTV7M_Dh-D1iJO3JV8'), ("'Your value isn't defined by how hard you work, but how hard it is to replace you.' (Podcast #170)", '13pjLtHmlHaCsBhmhNuTe9gB7a-8JAmXvjqugtIsKcKE'), ("'Information Theory' (Podcast #171)", '1_ZaII4Hi1-4y5HrpssMkfxbalviuv9xc3oVmWrtuL3s'), ("'Embrace failure, but don't try to chase it.' (Podcast #169)", '1olXXGW72qqpGkW9LNdzXBoYSbIiQ6FmE2GJ6RGctVYk'), ("'If you don't want to work, be smart about it.' (Podcast #168)", '1RkzmTtb9wn_5c_DC9CZwb0i7yau1gIXgx2P7IfuRU7A'), ('Guilt Tripping, Default Mode Network & Fitting In(Podcast #167)', '1sQsmNo1c3zS1eyL6wN3LZ71F9QlAbqT6IUhaejwDvCI'), ('Athene Real Talk Podcast #37', '15yaoKfscFs23-9UsizlGsrYU0Xmy5h4vhnNGnQlOhuw'), ('Athene Real Talk Podcast #36', '1M3cryI7VXA-n2ofDOmd9p6MoNO68xiOeeuOkk__CZ-M'), ("'People want to be right because it gives them safety.' (Podcast #141)", '1LxY9Q08N29d2_0RYIJgGIafVlvY6oOs0ImuIshVOVlg'), ("'Your Emotional Needs Are In Control Because You Don't Understand Them_'(Podcast #140)", '1CFJI5JnG18YE1Bp-ZyjYfRxELhqgyHiYncL3mGu5rSk'), ('Athene Real Talk Podcast #35', '11Im3pQG3LKj0jPhthwBB_GFuXR5sBJ9l2_ryiG5oiE8'), ('Self Image, Logic and Confrontation (Podcast #48)', '1l_ULHh7ucNKt7YSE1W-e8-Kp9LH5_NvsCNHhx9Rgsgc'), ('Responsibility And Awareness(Podcast #139)', '11k0uBP5A0YGFHSvYDTyaGDRLr8xEzbBoneQat7v0CVg'), ('Athene Real Talk Podcast #34', '1XckrgVs9OhKa4ZMxdHkDalkYFl3Qt6KFD8foGBSFr0o'), ('Probabilities & How The World Is Probabilistic (Podcast #82)', '16M3UZQcfqcjsvBZ1ve3CfDzhMjnGQwiMJa9eaDkrIDs'), ('Identity, Needs And Beliefs (Podcast #138)', '1UiGTbZJAGxAiRq8CnJbtywRwXnWRfD0kFsbZQDFIoE8'), ('Athene Real Talk Podcast #33', '1yfPcbviOf6eLK66hhFO7HnwHuJcE3cdCnnXXQpYSWa0'), ("'Understanding can make you really overcome anything.' (Podcast #137)", '192kAMzThDQvUbLO0tiBj8GRu_9_MeMGHYkmXUgjd94E'), ('Athene Real Talk Podcast #32', '1xOhzO7-Crd-qj0wRxGI9mCXugqWgpXDbofR7UE0qrsE'), ('Debate Between Cocky & Philosophical Athene (Podcast #136)', '1cRznfR3w_NgWbf8cPGjKwpWWLqDQ6fw2LumS0ZKgH-w'), ('Athene Real Talk Podcast #31', '16PImipoeDinargVrmX7D4PcvKBbJAiSU45XxVkQIziQ'), ("'Why I became so robotic.' (Podcast #135)", '1ogYnr8xZKsq2H4d3kwhpAJj6LiSIMGy4tm95lidTc98'), ('Integrity & Relationships (Podcast #134)', '1zh0EKDFZCBRwIX1mwZHWL5m2Kg9vLd3gy-B2pLMuBcI'), ("'Talking About My New Approach On Stream.' (Podcast #133)", '1XPGQrcszItItRHfmNT2-KlF1pwVse9NUaIm7HH-P9C4'), ('Athene Real Talk Podcast #29', '19t2HWS7OfhenAKJusH_fKylI0zVeEp2ZETIvjMvYzdM'), ("'We live in a world where everybody is actually enhancing each other's anger.' (Podcast #131)", '1UABtMf5sXKgfGIkpGnHj-958m1atUvEiG0M30BAIivY'), ("'For being understood you also need to feel understood.' (Podcast #130)", '1x4KQtw-OfnJ-p3oVNzSVsTYE8ZLpKt9WMcgO0zvPmgA'), ("'Find the abundance in what gives you confidence.' (Podcast #129)", '1J7cpXxbHn98vVc2kL7Bv7mXdLnxyxVr6uTP36Dh8UQA'), ('Finding What Gives You Confidence (Podcast #128)', '1qkzeTshJ8QM9g9E2Nl6R9BhvyUngvR6JmLvq9HF2iPU'), ('Being Outside Your Head (Podcast #127)', '1SOc7NbcmQrViw5dfAOgFz7Zeh63id_3yzozNEn05HoQ'), ('Talk About Morals (Post VeganGains Debate) (Podcast #126)', '1DaAk-J9lub2Y2_pRwP619GgGkola4kwyHvv5KznLH5E'), ('This Will Change Your Life', '1gIbNRDx2Kj8ESDykbA6D44ApfDT62TqmV-DUjUYgn9A'), ("'Consistency is within a framework of what you are.' (Podcast #123)", '1A0GCm69PsUeO1diCf9vXlfCLYz14SnCrBKQiE2GeaTo'), ("'It all starts with a choice.' (Podcast #122)", '1WnkbJi9NURLgkgYrS0TjbAYCEZe8jpl1uKDf0j6Z5IA'), ("'People have the idea that they get to decide what to do with their lives.' (Podcast #119)", '115gfFij06yVH76ekNef-mPIyrFd3QbEyqHvxzmT_K84'), ("'The reason I achieve so much is because I never settle.' (Podcast #118)", '1as1kdHGvPV0iYv3P99WE9OTHz8shMayHKgeSFWwHIgU'), ('Brian & Riccardo Talk About Logic (short) (Podcast #60)', '1vT8Mvbj2GJlBQUVYvTXe8ocAfvslDBoyDC2fMxqSQvE'), ("'Understanding doesn't mean being a logic robot, it means understanding yourself.' (Podcast #142)", '1MOiZmeyQQtjab3wVA7VYqxBU-qPae4sob1WXpw-LOx0'), ('The Hemispheres Of The Brain (Podcast #143)', '1BUX-muIN9zIyPJhENC04SBAjW5UGPuDBivoU2TBcUtA'), ("'You can change right now.' (Podcast #144)", '1VaCwm6ox2Ok7VMXo_mGUMne5YUASNwfVRQVw0xNEUBM'), ("'Actions and reality speak louder than anything.' (Podcast #145)", '11nm3l5b__brEqcJwuoyNA0vDvAzuMH-2UKrGddN15F4'), ("'What is information What is our essence' (Podcast #146)", '18HwAzoV8Gm7l1-GBnS3-8ClEasRcWw5S4ORICQezDi8'), ("'Settling is a bigger threat to your safety than pushing yourself.'(Podcast #147)", '1aDNaDEwKcqPVRDvfhaW12p5jQ7JNc-Y8kTINMQX4hwk'), ("'I believe everything has a logical answer.' (Podcast #148)", '1AbXzQ0gMxR9kg-9gKU3xHxsuTtUxmIdkA2P8xXdUY6E'), ("'Why do you guys settle' (Podcast #149)", '1hM9sdMMbFXKpO6bJYiFn5kKkby0h_v9LkKJdUS31LjM'), ("'Life is not about what you want bro, life is about what is.' (Podcast #150)", '1P5SWVumzmOjq0K5xUwzcotEhRNncViAGh8cf0nIr-iU'), ("'We all have a sense of entitlement.' (Podcast #151)", '1u2LZF1Fcnp8U8WawmtKADA3xCQWWw2dIXfsi-fiXSuY'), ("'I know I am merely the result of my environment.' (Podcast #152)", '19O6KoUl0spFm4kaCtkxnmvKIO4w_dsSxDAtQzIhZBE4'), ("'You come here to grow up.' (Podcast #102)", '1JSrcEofiAFJ70ezChB8S_4rVsJdxWKR_JecgU1-4elI'), ("'Every person watching is more intelligent than the average guy 4000 years ago.' (Podcast #153)", '1zLdWo0M3x0GzhDZZCD25CBUKlM2cJjRglhZ-N4-LQYw'), ("'Relative to the universe, there's no purpose.'(Podcast #103)", '1EjoIU4DbOLmqvgdqsuPF1AZ4jA4V9S2lL6GABpftaNk'), ("'I am the most intelligent person in the world.' (Podcast #154)", '1-flmFy1E3QLEArPUETSiHeZCiClRqNpBRXJBpNa53Z0'), ("'Saying life is about happiness is an insult.'(Podcast #104)", '1sMr74yB092GWdC77tN9zExWPljjNxz70uz9VwHQuG4c'), ('Veganism and Vegetarianism (Podcast #155)', '1iwu_O4bLyk-QHuTj1uoVYly2l64zaOWqeipCBi2SGrY'), ('I Wish Athene Dies (Podcast #156)', '1LLQzz-G_f_WAS6SJxa41LNbLtxGv1JigNXw9Okd8ew0'), ("'Don't be attached to all these concepts.'(Podcast #105)", '1Kgz5XOKXUFQoUYwQe4MRXH0vJ_EybumqR0eYZaQ8hWs'), ('Intuition, Trusting & Loving yourself. (Podcast #106)', '160AisEfIZcB0ghOcFFLSj1RqFi_FMr23wrVQLN1wklk'), ("'Things are just the way they are, you know' (Podcast #157)", '1nf9vrpnbCwSFlNIe1PzCd8X2QZJeefuAKiJnGjGBWRc'), ("'You can already process what you're afraid of before it happens.' (Podcast #159)", '1qMRDLgBQhUkBcAAd6spZrTQtKURUN2iHAd9nLdxb_Ks'), ("'It is not your fault!' (Podcast #107)", '14elFpGJiH8BHHyZgZ88WZ1oUN_YpcosSFUQj1LtHz9E'), ('Dopamine And Serotonin (Podcast #158)', '1Jwl_gduc647hWriPRjhDTDSZfLUbdinl7QXOFBEd-3M'), ("'You don't need to live this fake life!' (Podcast #108)", '13lA2Gex93kLqkrbPtxIu7Jm07234Rqn2nYPSqFicThU'), ("'You can run away from your problems, but you can't run away from yourself.' (Podcast #160)", '1U35Kx-XOmW4Va3pRw8fb0dDFUd7KGnpX2py-2t8znbk'), ("'Trust your reason, it has answers to everything.'(Podcast #109)", '1EP7eEWmGxOFBJgIDjJhnQ54_97vwhDSreL2H6VcOkP8'), ("'Athene, how do I join your cult'(Podcast #161)", '174uUBfwO-y5BGUpNDKdH5-UlKjGy14P9-vgEr-AhhxY'), ("'You actively make the choice not to care.' (Podcast #110)", '1HJDV54gKmeTDjkm8xIkXNB-uK3uduWjVMWYIZCN-dnY'), ("'Are you right now the best version of yourself' (Podcast #162)", '1BOn0enD8e9q-c24Jh9YIaWRDOQlY4SbR2JXTU-zFBIw'), ("'Reality is that you have a better life than most people on the planet.' (Podcast #111)", '1Rp_Rd3zZFU3SxzFiiQtQIi3zAMyxkr9ViQXPbpTtTsg'), ("'The Singularity Group.' (Podcast #163)", '1bMt0eoqC1Y_UaThe08KVouJJpCrj3b0lcaLC4ItFerU'), ("'Heaven & hell ain't after you die, it's what you breath every single moment' (Podcast #112)", '11RDk2afKu5FKfEa8cjtCT5LeZHnwHseIct_L914kqRE'), ("'I don't let haters define what I can and can't do.' (Podcast #164)", '1DmZc8gmXgOt9ghEfXducoUKoTUPZJ_9HxdRQNACMtMc'), ("'The Red Pill.' (Podcast #165)", '1anegDXgf4nQwL6ha2nftJyalRzfBwMtu9BmvKD7uGpo'), ("'Everybody, whenever they do anything, they always have a motive.' (Podcast #114)", '14kdQIwLVrTLD6vz1zAAghzuozSpBy2p2mRl0vl0q2x0'), ("'I will always push myself.' (Podcast #166)", '17M1gESRdb0_6G_uGM7SIGFAExI-7WSBJf6uQ-ya_1EA'), ("'You close your eyes for the good.' (Podcast #115)", '1YJTCrk3frKR02_Osp1p7OV-P1N3Ai7aE7x2zIBUVq1o'), ("'I'm not here to fulfill my own pleasure, I'm here for a bigger picture.' (Podcast #116)", '1DEugdbZHXM9e4QeGMkpqB3G3L4Il-7t9EZnxGlBiLqU'), ("'People always give away their authority.' (Podcast #176)", '15dMCvhUCtyf-2AZU9h7OEykWVz9hg2-CB_QGL-SpwHY'), ("'People care more about themselves than about honesty.' (Podcast #117)", '10XzTRmjJ6IBRirKZdlA_ekbKTt72wQ7LRkumF-IUlCY'), ('Guilt Tripping, Default Mode Network & Fitting In(Podcast #167)', '1ycyyMJI5aBeiCv6f6gsk38FFpF5mkeKXAswC8UnHg_A'), ("'If you don't want to work, be smart about it.' (Podcast #168)", '1fx1jewAN0b7fAQLWYUimf-1orB_EhprIy9F6hpNhdXQ'), ("'Embrace failure, but don't try to chase it.' (Podcast #169)", '1whCgNJCQqcLvC76nZ4T0rbMJDmpbO0JH5_s46njxHp8'), ("'Your value isn't defined by how hard you work, but how hard it is to replace you.' (Podcast #170)", '1FURVT8yBUC1VQQFgABgUAFu4pJdqJkRjrzWK5M69adM'), ("'Information Theory' (Podcast #171)", '1QGwwT8hFhumyogM3YxkAW1Ou23a_CV6c_HcAo7qJwHU'), ('Afterlife, Quantum Immortality And Cognitive Dissonance (Podcast #172)', '1oZMWjZvvycll2Ucq47gt-foMytV_RXYTqGnJyUcTfVo'), ("'At the end of the day, I just wanna do as much good as I can.'(Podcast #173)", '1qoz2QGNucDD1hRLn87Uz-1KoSPvNvIe2LiNvJrrCWP8'), ("'Learning is merely a tool to help you take action.' (Podcast #174)", '1Mebwa7NW6DYfOeUnVcUDKWcDXR7VWCAes4siGYVGIII'), ("'I don't allow myself to make it about myself).' (Podcast #175)", '1tUrZ3b4Gt-jD5tTx0F5hWZHwPy4zwCaF6UCVGzeB56g')]
 def get_file_name(peth):
     current_path = ''
     for index, part in enumerate(peth.split('/')):
@@ -339,63 +103,84 @@ def main():
                 print(os.path.join(root, file))
                 pdf_files.append(os.path.join(root, file))
 
-    for file in pdf_files:
-            try:
-                name = file.split("/")[-1]
-                doc_type = 'document'
-                try:
-                    doc_id = find_document_id(name.replace(".docx", "").replace(".pdf", ""), "1fFNdrhD5ZbkVTb1uX4-tWuDiU-T4odCS")
-                except:
-                    traceback.print_exc()
-                    continue
-                if not doc_id:
-                    raise Exception("=======Couldn't find", file)
-                print("full_name:", file)
-                print("name:", name)
-                print("doc_type:", doc_type)
-                print("doc_id:", doc_id)
+    for file in pdf_files[:1]:
+        print()
+        doc_id = None
+        try:
+            name = file.split("/")[-1]
 
-                header_data = None
-                if doc_type == 'document':
-                    header_data = get_header_data(doc_id)
-                    context = ""
+            doc_type = 'document'
+
+            # print(''.join(e for e in name if e.isalnum()))
+            for nameall, idall in all:
+                # print(''.join(e for e in nameall if e.isalnum()))
+                temp = name.replace("pdf", '')
+                if ''.join(e for e in nameall if e.isalnum()) == ''.join(e for e in temp if e.isalnum()):
+                    doc_id = idall
+                    name = nameall
+
+            if not doc_id:
+                raise SystemExit("=======Couldn't find", file)
+
+            print("full_name:", file)
+            print("name:", name)
+            print("doc_type:", doc_type)
+            print("doc_id:", doc_id)
+
+            header_data = None
+            if doc_type == 'document':
+                header_data = get_header_data(doc_id)
+                context = ""
+                for url, dataz in header_data.items():
+                    if 'linked topics' in dataz['name'].lower():
+                        for line in dataz['context'].split("***")[-1].split("] "):
+                            context += line[:-9] + ", "
+                        break
+                if not context:
                     for url, dataz in header_data.items():
-                        if 'linked topics' in dataz['name'].lower():
+                        if 'transcript' in dataz['name'].lower():
                             for line in dataz['context'].split("***")[-1].split("] "):
                                 context += line[:-9] + ", "
-                            break
-                    if not context:
-                        for url, dataz in header_data.items():
-                            if 'transcript' in dataz['name'].lower():
-                                for line in dataz['context'].split("***")[-1].split("] "):
-                                    context += line[:-9] + ", "
-                                    print(line[:-9])
-                        context = context[250:]
-                    print(context)
-                else:
-                    continue
-
-                meta = {'doc_name': name, 'doc_type': doc_type, 'doc_id': doc_id, 'doc_path': file}
-                with pdfplumber.open(file) as docx:
-                    for page_num in range(len(docx.pages)):
-                        # do all this effort to get the most relevant link
-                        link = f'https://docs.google.com/{doc_type}/d/' + doc_id
-                        if doc_type == 'document':
-                            print("num:", page_num + 1)
-                            docx_text = docx.pages[page_num].extract_text()
-                        # Generate embedding
-                        # embedding = model.encode(docx_text)
-                        embedding = []
-                        # set metadata
-                        metas = {}
-                        metas.update(meta)
-                        metas.update({'page_num': page_num + 1, 'header': 'Page ' + str(page_num + 1), 'link': link, 'context': context})
-                        # pack chromadb tuple
-                        embeddings_data.append((embedding, docx_text, metas, doc_id + '-' + str(page_num + 1)))
-                        # print(metas)
-            except:
-                traceback.print_exc()
+                                print(line[:-9])
+                    context = context[250:]
+                print(context)
+            else:
                 continue
+
+            meta = {'doc_name': name, 'doc_type': doc_type, 'doc_id': doc_id, 'doc_path': file}
+            with pdfplumber.open(file) as docx:
+                for page_num in range(len(docx.pages)):
+                    # do all this effort to get the most relevant link
+                    link = f'https://docs.google.com/{doc_type}/d/' + doc_id
+                    if doc_type == 'document':
+                        print("num:", page_num + 1)
+                        docx_text = docx.pages[page_num].extract_text()
+                        fulltext = ""
+                        for elem in docx_text.split('] '):
+                            fulltext  += elem[:-9]
+                        fulltext = fulltext.replace("\n", " ").replace('Evaluation Only.', '').replace('Created with Aspose.Words', '').replace('Copyright 2003-2023 Aspose Pty Ltd.', '').replace("Evaluation Mode.", "").replace('Created with an evaluation copy of Aspose.Words.', '').replace('To discover the full versions of our APIs please visit: https://products.aspose.c', '').replace('To discover the full versions of our APIs please visit: https://products.aspose.com/words/', "").strip()
+                        print(fulltext)
+                        docx_text = fulltext
+                        temp_contest = ""
+                        for elem in docx_text.split('] '):
+                            # print(elem[:-9])
+                            temp_contest += elem[:-9]
+                        if temp_contest:
+                            context = temp_contest.replace("\n", " ")[:1000]
+                        # print(docx_text)
+                    # Generate embedding
+                    # embedding = model.encode(docx_text)
+                    embedding = []
+                    # set metadata
+                    metas = {}
+                    metas.update(meta)
+                    metas.update({'page_num': page_num + 1, 'header': 'Page ' + str(page_num + 1), 'link': link, 'context': context})
+                    # pack chromadb tuple
+                    embeddings_data.append((embedding, docx_text, metas, doc_id + '-' + str(page_num + 1)))
+                    # print(metas)
+        except Exception as err:
+            traceback.print_exc()
+            continue
 
     # recreate collection with new data
     print("Creating database")
@@ -424,4 +209,19 @@ def main():
 
 
 if __name__ == "__main__":
+#     test = """[00:11:30] The experience should improve what I am and myself is just a flawed idea based on
+# identity
+# [00:11:36] myself doesn't even exist.
+# [00:11:38] Just like I said earlier we're completely interconnected with everyone.
+# [00:11:41] The idea of self is just a mental construct.
+# [00:11:43] So then you immediately start talking about I wouldn't say higher awareness but just
+# you
+# [00:11:47] talk about more a collective awareness a collective entity or identity rather than a
+# personal
+# [00:11:53] one."""
+#     temp_contest = ""
+#     for elem in test.split('] '):
+#         print(elem[:-9])
+#         temp_contest += elem[:-9]
+#     print(temp_contest)
     main()

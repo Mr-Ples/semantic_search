@@ -181,7 +181,7 @@ def find_document_id(documentname, drivefolderid = constants.DESIGN_DOCUMENTS_DR
     service = build('drive', 'v3', credentials=credentials)
 
     def search_file(document_name):
-        query = f"name = '{document_name}' and mimeType = 'application/vnd.google-apps.document' and trashed = false"
+        query = f"'1fFNdrhD5ZbkVTb1uX4-tWuDiU-T4odCS' in parents"
         # if folder_id:
         #     query += f" and '{folder_id}' in parents"
 
@@ -202,7 +202,6 @@ def find_document_id(documentname, drivefolderid = constants.DESIGN_DOCUMENTS_DR
             except HttpError as error:
                 print(f'An error occurred: {error}')
                 break
-
         return results
 
     def find_document_in_folder(folder_id, document_name):
@@ -210,8 +209,10 @@ def find_document_id(documentname, drivefolderid = constants.DESIGN_DOCUMENTS_DR
         files = search_file(document_name)
         print(files)
         for file in files:
-            if file['name'] == document_name:
-                ids.append(file['id'])
+            ids.append((file['name'], file['id']))
+            # if file['name'] == document_name:
+            #     ids.append(file['id'])
+        print(ids)
         if len(files) > 1:
             print("=========", document_name)
         largest_file = None
@@ -233,6 +234,7 @@ def find_document_id(documentname, drivefolderid = constants.DESIGN_DOCUMENTS_DR
         return document_id
     else:
         print('Document not found in the specified folder.')
+        raise Exception('Document not found in the specified folder.')
 
 
 
@@ -249,4 +251,6 @@ def main():
 
 if __name__ == "__main__":
     # main()
+    find_document_id('yee')
+    exit()
     get_header_data('1bIZNvIwTo2Dh2tZAXXsacHkuZPrRLCX1nQfpJ0s1_UE')
