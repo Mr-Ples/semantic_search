@@ -34,7 +34,7 @@ def main(query: List[str]):
         if documents.get(doc_id):
             continue
         doc_type = datasss['metadata']['doc_type']
-        documents[doc_id] = {'header': datasss['metadata']['doc_name'], 'link': f'https://docs.google.com/{doc_type}/d/' + doc_id}
+        documents[doc_id] = {'header': datasss['metadata']['doc_name'].replace('.pdf', ''), 'link': f'https://docs.google.com/{doc_type}/d/' + doc_id}
     for idd, docuss in documents.items():
         print(docuss)
 
