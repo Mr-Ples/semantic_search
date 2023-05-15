@@ -3,7 +3,9 @@ import json
 import os
 import shutil
 import traceback
-
+import google.auth
+from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
@@ -161,6 +163,67 @@ def get_header_data(doc_id: str):
             except:
                 pass
     return headers
+
+def find_document_id(documentname, drivefolderid = constants.DESIGN_DOCUMENTS_DRIVE_FOLDER_ID):
+    credentials = service_account.Credentials.from_service_account_file(
+        SERVICE_ACCOUNT_FILE, scopes=SCOPES
+    )
+    service = build('drive', 'v3', credentials=credentials)
+
+    def search_file(document_name):
+        query = f"name = '{document_name}' and mimeType = 'application/vnd.google-apps.document' and trashed = false"
+        # if folder_id:
+        #     query += f" and '{folder_id}' in parents"
+
+        results = []
+        page_token = None
+        while True:
+            try:
+                response = service.files().list(
+                    q=query,
+                    spaces='drive',
+                    fields='nextPageToken, files(id, name, mimeType, parents)',
+                    pageToken=page_token
+                ).execute()
+                results.extend(response.get('files', []))
+                page_token = response.get('nextPageToken', None)
+                if page_token is None:
+                    break
+            except HttpError as error:
+                print(f'An error occurred: {error}')
+                break
+
+        return results
+
+    def find_document_in_folder(folder_id, document_name):
+        ids = []
+        files = search_file(document_name)
+        print(files)
+        for file in files:
+            if file['name'] == document_name:
+                ids.append(file['id'])
+        if len(files) > 1:
+            print("=========", document_name)
+        largest_file = None
+        largest_size = 0
+        for id in ids:
+            file_metadata = service.files().get(fileId=id, fields='size').execute()
+            file_size = int(file_metadata.get('size', 0))
+            if (not largest_file) or file_size > largest_size:
+                largest_file = id
+                largest_size = file_size
+
+        return largest_file
+
+    document_name = documentname
+
+    document_id = find_document_in_folder(drivefolderid, document_name)
+    if document_id:
+        print(f'Document found: {document_name}, ID: {document_id}')
+        return document_id
+    else:
+        print('Document not found in the specified folder.')
+
 
 
 def main():
