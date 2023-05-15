@@ -110,7 +110,15 @@ def callback():
         )
     except:
         traceback.print_exc()
-        return "User not a member of the cos-search project", 403
+        try:
+            member_response = requests.get(
+                "https://gitlab.com/api/v4/projects/{}/members/{}".format(constants.GILTAB_COS_DOCUMENTATION_PROJECT_ID, user_id),
+                headers={'Authorization': 'Bearer ' + token['access_token']}
+            )
+        except:
+            traceback.print_exc()
+            return "User not a member of the CoS Search or CoS Documentation projects", 403
+
     print(member_response)
     if member_response.status_code == 200:
         session['auth_token'] = token
