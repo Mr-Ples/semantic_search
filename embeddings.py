@@ -211,14 +211,56 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
-    # os.makedirs(constants.CHROMA_PERSIST_DIR, exist_ok=True)
-    # client = chromadb.Client(
-    #     Settings(
-    #         chroma_db_impl=constants.CHROMA_DB_IMPL,
-    #         persist_directory=constants.CHROMA_PERSIST_DIR
-    #     )
-    # )
-    # model = SentenceTransformer(constants.EMBEDDING_MODEL)
-    # collection = client.get_or_create_collection(name='docs', embedding_function=lambda text: model.encode(text))
-    # print(collection.count())
+    # main()
+
+    client = chromadb.Client(
+        Settings(
+            chroma_db_impl=constants.CHROMA_DB_IMPL,
+            persist_directory=constants.CHROMA_PERSIST_DIR
+        )
+    )
+    model = SentenceTransformer(constants.EMBEDDING_MODEL)
+    done_docs = []
+    for collectio in ['docs', 'realtalks']:
+        collection = client.get_collection(name=collectio, embedding_function=lambda text: model.encode(text))
+        ids = collection.get()['ids']
+        documents = collection.get()['documents']
+        metass = collection.get()['metadatas']
+        metas_new = []
+        for idss, meta, docus in zip(ids, metass, documents):
+            # meta.update({'context': ''})
+            doc_name = meta['doc_name']
+
+            removes = ['Evaluation Only. Created with Aspose.Words. Copyright 2003-2023 Aspose Pty',
+                       'Created with an evaluation copy of Aspose.Words. To discover the full versions',
+                       'of our APIs please visit: https://products.aspose.com/words/',
+                       'our APIs please visit: https://products.aspose.com/words/',
+                       'Created with an evaluation copy of Aspose.Words. To discover the full',
+                       'This document was truncated here because it was created in the Evaluation Mode.',
+                       'This document was truncated here because it was created in the Evaluation']
+            if any([elem in docus for elem in removes]):
+                print("remove aspose")
+                for remove in removes:
+                    docus = docus.replace(remove, '')
+
+            if docus.startswith('.  '):
+                print('remove garbase')
+                docus = docus[3:]
+
+            if meta['page_num'] == 1 and ''.join(e for e in doc_name if e.isalnum()).lower() not in ''.join(e for e in docus if e.isalnum()).lower():
+                print("add doc name")
+                docus = doc_name + ' ' + docus
+
+            if '.pdf' in doc_name:
+                print("Remove pdf")
+                meta['doc_name'] = meta['doc_name'].replace('.pdf', '')
+
+            print('https://docs.google.com/document/d/' + idss)
+            # print(meta['doc_name'])
+            # print(docus)
+            print(collection.get(ids=[idss]))
+            collection.update(ids=[idss], documents=[docus], metadatas=[meta])
+            # print(docus)
+            print(collection.get(ids=[idss]))
+            # exit()
+        # print([elem['doc_name'] for elem in collection.get(include=["metadatas"])])
