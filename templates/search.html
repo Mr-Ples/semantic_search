@@ -51,8 +51,8 @@
                                     <div class="mt-4 text-center">
                                         <h4>Search Results For "{{ collection.query }}"</h4>
                                     </div>
-                                    {% if collection.results %}
                                     <div class="row">
+                                    {% if collection.results %}
                                         <div class="col-md">
                                             {% for _, result_data in collection.results.items() %}
                                             <div class="search-item">
@@ -94,7 +94,6 @@
                                         <h1>Tap Search!</h1>
                                     {% endif %}
                                         <div class="clearfix"></div>
-
                                     </div>
                                 </div>
                                 {% endfor %}
