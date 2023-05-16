@@ -120,7 +120,10 @@ def main():
                     name = nameall
 
             if not doc_id:
-                raise SystemExit("=======Couldn't find", indexx, "", file)
+                doc_id = find_document_id(name.replace(".docx", "").replace(".pdf", ""), constants.REALTALKS_DRIVE_FOLDER_ID)
+                print('https://docs.google.com/document/d/' + doc_id)
+                if not doc_id:
+                    raise SystemExit("=======Couldn't find", indexx, "", file)
 
             print("full_name:", file)
             print("name:", name)
@@ -191,37 +194,31 @@ def main():
             persist_directory=constants.CHROMA_PERSIST_DIR
         )
     )
-    # client.reset()
+    # # client.reset()
     model = SentenceTransformer(constants.EMBEDDING_MODEL)
-    client.delete_collection('realtalks')
-    collection = client.create_collection(name='realtalks', embedding_function=lambda text: model.encode(text))
-    # print([elem[1] for elem in embeddings_data])
-    # print()
-    # print([elem[2] for elem in embeddings_data])
-    # print()
-    # print([elem[3] for elem in embeddings_data])
+    # client.delete_collection('realtalks')
+    collection = client.get_or_create_collection(name='realtalks', embedding_function=lambda text: model.encode(text))
+    print("BEFORE: ", collection.count())
     collection.add(
         # embeddings=[elem[0] for elem in embeddings_data],
         documents=[elem[1] for elem in embeddings_data],
         metadatas=[elem[2] for elem in embeddings_data],
         ids=[elem[3] for elem in embeddings_data]
     )
+    print("AFTER: ", collection.count())
+
+
 
 
 if __name__ == "__main__":
-#     test = """[00:11:30] The experience should improve what I am and myself is just a flawed idea based on
-# identity
-# [00:11:36] myself doesn't even exist.
-# [00:11:38] Just like I said earlier we're completely interconnected with everyone.
-# [00:11:41] The idea of self is just a mental construct.
-# [00:11:43] So then you immediately start talking about I wouldn't say higher awareness but just
-# you
-# [00:11:47] talk about more a collective awareness a collective entity or identity rather than a
-# personal
-# [00:11:53] one."""
-#     temp_contest = ""
-#     for elem in test.split('] '):
-#         print(elem[:-9])
-#         temp_contest += elem[:-9]
-#     print(temp_contest)
     main()
+    # os.makedirs(constants.CHROMA_PERSIST_DIR, exist_ok=True)
+    # client = chromadb.Client(
+    #     Settings(
+    #         chroma_db_impl=constants.CHROMA_DB_IMPL,
+    #         persist_directory=constants.CHROMA_PERSIST_DIR
+    #     )
+    # )
+    # model = SentenceTransformer(constants.EMBEDDING_MODEL)
+    # collection = client.get_or_create_collection(name='docs', embedding_function=lambda text: model.encode(text))
+    # print(collection.count())

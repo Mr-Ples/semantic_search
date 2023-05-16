@@ -181,7 +181,7 @@ def find_document_id(documentname, drivefolderid = constants.DESIGN_DOCUMENTS_DR
     service = build('drive', 'v3', credentials=credentials)
 
     def search_file(document_name):
-        query = f"'1fFNdrhD5ZbkVTb1uX4-tWuDiU-T4odCS' in parents"
+        query = f"'{drivefolderid}' in parents"
         # if folder_id:
         #     query += f" and '{folder_id}' in parents"
 
@@ -205,15 +205,19 @@ def find_document_id(documentname, drivefolderid = constants.DESIGN_DOCUMENTS_DR
         return results
 
     def find_document_in_folder(folder_id, document_name):
+        all = []
         ids = []
         files = search_file(document_name)
-        print(files)
+
+        # print(files)
         for file in files:
-            ids.append((file['name'], file['id']))
-            # if file['name'] == document_name:
-            #     ids.append(file['id'])
-        print(ids)
-        if len(files) > 1:
+            # print(file)
+            all.append((file['name'], file['id']))
+            # print(document_name)
+            if file['name'] == document_name:
+                ids.append(file['id'])
+
+        if len(ids) > 1:
             print("=========", document_name)
         largest_file = None
         largest_size = 0
