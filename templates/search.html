@@ -41,8 +41,8 @@
                                 <!-- <li class="nav-item"><a href="#home" data-toggle="tab" aria-expanded="true" class="nav-link active">All results <span class="badge badge-success ml-1">{{ nr_results }}</span></a></li>
                                 <li class="nav-item"><a href="#docs" data-toggle="tab" aria-expanded="false" class="nav-link">Documents <span class="badge badge-danger ml-1">{{ nr_doc_results }}</span></a></li> -->
                             </ul>
-                            {% for collection in collections %}
                             <div class="tab-content">
+                                {% for collection in collections %}
                                 <div class="tab-pane active" id="{{ collection.col_id }}">
                                     <div class="mt-4 text-center">
                                         <h4>Search Results For "{{ collection.query }}"</h4>
@@ -93,8 +93,8 @@
 
                                     </div>
                                 </div>
+                                {% endfor %}
                             </div>
-                            {% endfor %}
                         </div>
                     </div>
                 </div>
