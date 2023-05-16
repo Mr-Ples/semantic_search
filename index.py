@@ -71,7 +71,7 @@ def search():
     [datas[collect.lower().replace(" ", '')].update({'selected': False, 'col_id': collect.lower().replace(" ", ''), 'col_name': collect, 'tab_id': collect.lower().replace(" ", '') + "y"}) for collect in constants.COLLECTIONS]
 
     if not request.query_string:
-        return render_template('search.html', collections=[datas.get(collect.lower().replace(" ", '')) for collect in constants.COLLECTIONS])
+        return render_template('search.html', collections=[datas.get(collect.lower().replace(" ", '')) for collect in constants.COLLECTIONS], query="")
 
     query = str(request.query_string.decode('ascii')).split('&')[0]
     collection = unquote(str(request.query_string.decode('utf-8')).split('&')[-1])
