@@ -209,10 +209,7 @@ def main():
 
 
 
-
-if __name__ == "__main__":
-    # main()
-
+def clean_everything():
     client = chromadb.Client(
         Settings(
             chroma_db_impl=constants.CHROMA_DB_IMPL,
@@ -258,9 +255,12 @@ if __name__ == "__main__":
             print('https://docs.google.com/document/d/' + idss)
             # print(meta['doc_name'])
             # print(docus)
-            print(collection.get(ids=[idss]))
+            # print(collection.get(ids=[idss]))
             collection.update(ids=[idss], documents=[docus], metadatas=[meta])
             # print(docus)
-            print(collection.get(ids=[idss]))
+            # print(collection.get(ids=[idss]))
             # exit()
         # print([elem['doc_name'] for elem in collection.get(include=["metadatas"])])
+
+if __name__ == "__main__":
+    main()
