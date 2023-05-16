@@ -46,7 +46,7 @@
 
                             <div class="tab-content">
                                 <div class="tab-pane active" id="docs">
-                                    {% if results|length > 0 %}
+                                    {% if results[0]|length > 0 %}
                                     <div class="row">
                                         <div class="col-md">
                                             {% for _, result_data in results.items() %}
@@ -96,7 +96,7 @@
 
                                 <div class="tab-content">
                                 <div class="tab-pane active" id="realtalks">
-                                    {% if doc_results|length > 0 %}
+                                    {% if doc_results[0]|length > 0 %}
                                     <div class="row">
                                         <div class="col-md">
                                             {% for _, result_data in doc_results.items() %}

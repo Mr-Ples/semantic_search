@@ -88,7 +88,7 @@ def search():
     print(request.__dict__)
     print(request.query_string)
     if not request.query_string:
-        return render_template('search.html', query='Search', results=cache.get('docs') or {}, nr_results=0, doc_results=cache.get('realtalks') or {}, nr_doc_results=0, collections=pack_collection())
+        return render_template('search.html', query='Search', results=cache.get('docs') or ({}, {}), nr_results=0, doc_results=cache.get('realtalks') or ({}, {}), nr_doc_results=0, collections=pack_collection())
     query = str(request.query_string.decode('ascii')).split('&')[0]
     collection = unquote(str(request.query_string.decode('utf-8')).split('&')[-1])
     query = base64.b64decode(query).decode('ascii')
