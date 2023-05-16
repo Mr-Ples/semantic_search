@@ -4,3 +4,4 @@ service_creds.json
 .idea
 chroma/**
 *parquet
+nohup.out

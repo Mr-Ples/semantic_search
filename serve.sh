@@ -4,7 +4,7 @@
 pkill -9 -f index.py
 
 # Start the Python server and redirect its output to a file
-/usr/bin/python index.py  &
+nohup /usr/bin/python index.py  &
 
 # Wait for the server to start up
 sleep 5
