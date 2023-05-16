@@ -63,22 +63,11 @@ def token_required(f):
 @app.route('/search', methods=['GET', 'POST'])
 @token_required
 def search():
-    def pack_collection(collection = ""):
-        collect_data = []
-        for collect in constants.COLLECTIONS:
-            print(collect, collection, collection in collect)
-            if collection.lower().replace(" ", '') in collect.lower().replace(" ", ''):
-                collect_data.append((collect, True))
-            else:
-                collect_data.append((collect, False))
-        return collect_data
-
-    datas = {}
     print("search", request.method)
     print(request.__dict__)
     print(request.query_string)
 
-    datas = {collect.lower().replace(" ", ''): cache.get(collect) or {} for collect in constants.COLLECTIONS}
+    datas = {collect.lower().replace(" ", ''): cache.get(collect.lower().replace(" ", '')) or {} for collect in constants.COLLECTIONS}
     [datas[collect.lower().replace(" ", '')].update({'selected': False, 'col_id': collect.lower().replace(" ", ''), 'col_name': collect}) for collect in constants.COLLECTIONS]
 
     if not request.query_string:
