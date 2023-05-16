@@ -19,7 +19,8 @@ def main(query: List[str], collection: str):
     results = collection.query(
         query_texts=query,
         where={"doc_type": "document"},
-        n_results=min(collection.count(), 100)
+        n_results=min(collection.count(), 50),
+        # n_results=collection.count()
     )
     datas = {}
     documents = {}
