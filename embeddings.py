@@ -145,13 +145,15 @@ def main():
     )
     client.reset()
     model = SentenceTransformer(constants.EMBEDDING_MODEL)
-    collection = client.create_collection(name=constants.COLLECTION_NAME, embedding_function=lambda text: model.encode(text))
+    collection = client.get_or_create_collection(name=constants.COLLECTION_NAME, embedding_function=lambda text: model.encode(text))
+    print("BEFORE: ", collection.count())
     collection.add(
         # embeddings=[elem[0] for elem in embeddings_data],
         documents=[elem[1] for elem in embeddings_data],
         metadatas=[elem[2] for elem in embeddings_data],
         ids=[elem[3] for elem in embeddings_data]
     )
+    print("AFTER: ", collection.count())
 
 
 if __name__ == "__main__":
