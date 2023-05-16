@@ -83,7 +83,7 @@ def search():
         datas[selected_collection] = cache.get(request.query_string)
     else:
         results, doc_results = semantic_search([query], selected_collection)
-        datas[selected_collection] = dict(query=query, results=results, nr_results=len(results), doc_results=doc_results)
+        datas[selected_collection].update(dict(query=query, results=results, nr_results=len(results), doc_results=doc_results, selected=True))
         cache.set(selected_collection, datas[selected_collection])
         cache.set(request.query_string, datas[selected_collection])
 
