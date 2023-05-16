@@ -46,7 +46,7 @@
 
                             <div class="tab-content">
                                 <div class="tab-pane active" id="docs">
-                                    {% if results[0]|length > 0 %}
+                                    {% if results[1].metadata %}
                                     <div class="row">
                                         <div class="col-md">
                                             {% for _, result_data in results.items() %}
@@ -86,7 +86,8 @@
                                             {% endfor %}
                                         </div>
                                     {% else %}
-                                    <h1>Tap Search</h1>
+                                        <h1>{{ results[1].metadata }}</h1>
+                                        <h1>Tap Search realktalks</h1>
                                     {% endif %}
                                         <div class="clearfix"></div>
 
@@ -96,7 +97,7 @@
 
                                 <div class="tab-content">
                                 <div class="tab-pane active" id="realtalks">
-                                    {% if doc_results[0]|length > 0 %}
+                                    {% if doc_results[1].metadata %}
                                     <div class="row">
                                         <div class="col-md">
                                             {% for _, result_data in doc_results.items() %}
@@ -137,7 +138,8 @@
                                         </div>
                                     </div>
                                     {% else %}
-                                        <h1>Tap Search</h1>
+                                        <h1>{{ doc_results[1].metadata }}</h1>
+                                        <h1>Tap Search realktalks</h1>
                                     {% endif %}
                                         <div class="clearfix"></div>
                                 </div>
