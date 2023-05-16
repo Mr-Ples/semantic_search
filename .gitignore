@@ -5,3 +5,4 @@ service_creds.json
 chroma/**
 *parquet
 nohup.out
+done
