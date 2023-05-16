@@ -13,18 +13,28 @@ from flask import (
     request,
 )
 from requests_oauthlib import OAuth2Session
+from flask_caching import Cache
 
 import constants
+import dirty_auth
 from semantic_search import main as semantic_search
 
-# from flask_lt import run_with_lt
+config = {
+    "PORT": 8089,
+    "HOST": "0.0.0.0",
+    "DEBUG": False,          # some Flask specific configs
+    "CACHE_TYPE": "SimpleCache",  # Flask-Caching related configs
+    "CACHE_DEFAULT_TIMEOUT": 300
+}
 
 app = Flask(__name__)
+app.config.from_mapping(config)
 app.secret_key = os.urandom(24)
+cache = Cache(app)
 
 # Set up GitLab OAuth2 configuration
-GITLAB_CLIENT_ID = os.environ.get("SEMANTIC_SEARCH_APPLICATION_ID")
-GITLAB_CLIENT_SECRET = os.environ.get("SEMANTIC_SEARCH_APPLICATION_SECRET_KEY")
+GITLAB_CLIENT_ID = dirty_auth.GITLAB_CLIENT_ID
+GITLAB_CLIENT_SECRET = dirty_auth.GITLAB_CLIENT_SECRET
 GITLAB_REDIRECT_URI = "https://semantic-search.jprq.live/callback"
 GITLAB_AUTHORIZATION_BASE_URL = "https://gitlab.com/oauth/authorize"
 GITLAB_TOKEN_URL = "https://gitlab.com/oauth/token"
@@ -39,9 +49,14 @@ oauth = OAuth2Session(GITLAB_CLIENT_ID, redirect_uri=GITLAB_REDIRECT_URI)
 #     # subdomain='semantic-search-bro-bro'
 # )
 
+
 def token_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
+        if request.query_string:
+            cache.set("request_path", request.path + '?' + request.query_string.decode('utf-8'))
+        else:
+            cache.set("request_path", request.path)
         auth_token = session.get('auth_token')
         if auth_token:
             try:
@@ -59,22 +74,32 @@ def token_required(f):
 @app.route('/search', methods=['GET', 'POST'])
 @token_required
 def search():
+    def pack_collection(collection = ""):
+        collect_data = []
+        for collect in constants.COLLECTIONS:
+            print(collect, collection, collection in collect)
+            if collection.lower().replace(" ", '') in collect.lower().replace(" ", ''):
+                collect_data.append((collect, True))
+            else:
+                collect_data.append((collect, False))
+        return collect_data
+
     print("search", request.method)
     print(request.__dict__)
     print(request.query_string)
+    if not request.query_string:
+        return render_template('search.html', query='Search', results={}, nr_results=0, doc_results={}, nr_doc_results=0, collections=pack_collection())
     query = str(request.query_string.decode('ascii')).split('&')[0]
     collection = unquote(str(request.query_string.decode('utf-8')).split('&')[-1])
     query = base64.b64decode(query).decode('ascii')
     print(query, collection.lower().replace(" ", ''))
-    results, doc_results = semantic_search([query], collection.lower().replace(" ", ''))
-    collect_data = []
-    for collect in constants.COLLECTIONS:
-        print(collect, collection, collection in collect)
-        if collection in collect:
-            collect_data.append((collect, True))
-        else:
-            collect_data.append((collect, False))
-    return render_template('search.html', query=query, results=results, nr_results=len(results), doc_results=doc_results, nr_doc_results=len(doc_results), collections=collect_data)
+
+    if cache.get(request.query_string):
+        results, doc_results = cache.get(request.query_string)
+    else:
+        results, doc_results = semantic_search([query], collection.lower().replace(" ", ''))
+        cache.set(request.query_string, (results, doc_results))
+    return render_template('search.html', query=query, results=results, nr_results=len(results), doc_results=doc_results, nr_doc_results=len(doc_results), collections=pack_collection(collection))
 
 
 @app.route('/')
@@ -122,6 +147,8 @@ def callback():
     print(member_response)
     if member_response.status_code == 200:
         session['auth_token'] = token
+        if cache.get("request_path"):
+            return redirect(cache.get("request_path"))
         return redirect("/")
     else:
         try:
@@ -131,6 +158,8 @@ def callback():
             )
             if member_response.status_code == 200:
                 session['auth_token'] = token
+                if cache.get("request_path"):
+                    return redirect(cache.get("request_path"))
                 return redirect("/")
         except:
             traceback.print_exc()
