@@ -53,20 +53,9 @@ oauth = OAuth2Session(GITLAB_CLIENT_ID, redirect_uri=GITLAB_REDIRECT_URI)
 def token_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if request.query_string:
-            cache.set("request_path", request.path + '?' + request.query_string.decode('utf-8'))
-        else:
-            cache.set("request_path", request.path)
-        auth_token = session.get('auth_token')
-        if auth_token:
-            try:
-                resp = oauth.get(GITLAB_USER_INFO_URL).json()
-            except:
-                return redirect("/login")
-            if not isinstance(resp, str):
-                return f(*args, **kwargs)
-            return redirect("/login")
-        return redirect("/login")
+        return f(*args, **kwargs)
+        #     return redirect("/login")
+        # return redirect("/login")
 
     return decorated_function
 
@@ -88,22 +77,28 @@ def search():
     print("search", request.method)
     print(request.__dict__)
     print(request.query_string)
+
+    datas = {collect.lower().replace(" ", ''): cache.get(collect) or {} for collect in constants.COLLECTIONS}
+    [datas[collect.lower().replace(" ", '')].update({'selected': False, 'col_id': collect.lower().replace(" ", ''), 'col_name': collect}) for collect in constants.COLLECTIONS]
+
     if not request.query_string:
-        return render_template('search.html', docs={}, realtalks={}, collections=pack_collection())
+        return render_template('search.html', collections=[datas.get(collect.lower().replace(" ", '')) for collect in constants.COLLECTIONS])
+
     query = str(request.query_string.decode('ascii')).split('&')[0]
     collection = unquote(str(request.query_string.decode('utf-8')).split('&')[-1])
+    selected_collection = collection.lower().replace(" ", '')
     query = base64.b64decode(query).decode('ascii')
-    print(query, collection.lower().replace(" ", ''))
+    print(query, selected_collection)
 
     if cache.get(request.query_string):
-        datas[collection.lower().replace(" ", '')] = cache.get(request.query_string)
+        datas[selected_collection] = cache.get(request.query_string)
     else:
-        results, doc_results = semantic_search([query], collection.lower().replace(" ", ''))
-        datas[collection.lower().replace(" ", '')] = dict(query=query, results=results, nr_results=len(results), doc_results=doc_results, nr_doc_results=len(doc_results))
-        cache.set(collection.lower().replace(" ", ''), datas[collection.lower().replace(" ", '')])
-        cache.set(request.query_string, datas[collection.lower().replace(" ", '')])
+        results, doc_results = semantic_search([query], selected_collection)
+        datas[selected_collection] = dict(query=query, results=results, nr_results=len(results), doc_results=doc_results)
+        cache.set(selected_collection, datas[selected_collection])
+        cache.set(request.query_string, datas[selected_collection])
 
-    return render_template('search.html', docs=datas.get('docs') or {}, realtalks=datas.get('realtalks') or {}, collections=pack_collection(collection))
+    return render_template('search.html', collections=[datas.get(collect.lower().replace(" ", '')) for collect in constants.COLLECTIONS])
 
 
 @app.route('/')

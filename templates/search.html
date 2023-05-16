@@ -25,84 +25,32 @@
                                                 <button id='search' type="button" class="btn waves-effect waves-light btn-custom"><i class="fa fa-search mr-1"></i> Search</button>
                                             </div>
                                         </div>
-                                        <div class="mt-4 text-center">
-                                        <h4>Search Results For "{{ query }}"</h4></div>
                                     </div>
                                 </div>
                             </div>
 
                             <ul class="nav nav-tabs tabs-bordered">
                                 {% for collection in collections %}
-                                {% if collection[1] == True %}
-                                <li class="nav-item"><a id="{{ collection[0] }}" href="#docs" data-toggle="tab" aria-expanded="true" class="nav-link active">{{ collection[0] }} <span class="badge badge-success ml-1">{{ nr_results }}</span></a></li>
+                                {% if collection.selected %}
+                                <li class="nav-item"><a id="{{ collection.col_id }}" href="#{{ collection.col_id }}" data-toggle="tab" aria-expanded="true" class="nav-link active">{{ collection.col_name }} <span class="badge badge-success ml-1">{{ collection.nr_results }}</span></a></li>
                                 {% else %}
-                                <li class="nav-item"><a id="{{ collection[0] }}" href="#realtalks" data-toggle="tab" aria-expanded="false" class="nav-link">{{ collection[0] }} <span class="badge badge-success ml-1">{{ nr_doc_results }}</span></a></li>
+                                <li class="nav-item"><a id="{{ collection.col_id }}" href="#{{ collection.col_id }}" data-toggle="tab" aria-expanded="false" class="nav-link">{{ collection.col_name }} <span class="badge badge-success ml-1">{{ collection.nr_results }}</span></a></li>
                                 {% endif %}
 
                                 {% endfor %}
                                 <!-- <li class="nav-item"><a href="#home" data-toggle="tab" aria-expanded="true" class="nav-link active">All results <span class="badge badge-success ml-1">{{ nr_results }}</span></a></li>
                                 <li class="nav-item"><a href="#docs" data-toggle="tab" aria-expanded="false" class="nav-link">Documents <span class="badge badge-danger ml-1">{{ nr_doc_results }}</span></a></li> -->
                             </ul>
-
+                            {% for collection in collections %}
                             <div class="tab-content">
-                                <div class="tab-pane active" id="docs">
-                                    <h1>{{ docs }}</h1>
-                                    {% if docs|length > 0  %}
-                                    <div class="row">
-                                        <div class="col-md">
-                                            {% for _, result_data in docs.items() %}
-                                            <div class="search-item">
-                                                <div class="row">
-                                                    <div class="col-1">
-                                                        <img src="{{ url_for('static', filename='images/document.png') }}" alt="Generic placeholder image" height="54">
-                                                    </div>
-                                                    <div class="col">
-                                                        <h4 class="mb-1"><a href="{{ result_data.metadata.link }}">{{ result_data.metadata.doc_name }} - {{ result_data.metadata.header }}</a></h4>
-                                                        <div class="font-13 text-success mb-3">{{ result_data.metadata.link }}</div>
-                                                    </div>
-                                                </div>
-
-
-                                                <p class="mb-0 text-muted">{{ result_data.metadata.context }}</p>
-                                            </div>
-                                            {% endfor %}
-                                        </div>
-                                        <div class="col-md-3">
-                                            <h2>Relevant Docs</h1>
-                                            <br>
-                                            {% for _, result_data in doc_results.items() %}
-                                            <div class="search-item">
-                                                <div class="row">
-                                                    <div class="col-2 ms-0 ps-0">
-                                                        <img src="{{ url_for('static', filename='images/document.png') }}" alt="Generic placeholder image" height="54", style="max-width: 30px; max-height: 30px;">
-                                                    </div>
-
-                                                    <div class="col">
-                                                        <h4 class="mb-1"><a href="{{ result_data.link }}">{{ result_data.header }}</a></h4>
-                                                        <!-- <div class="font-13 text-success mb-3">{{ result_data.link }}</div> -->
-                                                    </div>
-                                                </div>
-                                                <!-- <p class="mb-0 text-muted">{{ result_data.text }}</p> -->
-                                            </div>
-                                            {% endfor %}
-                                        </div>
-                                    {% else %}
-                                        <h1>{{ results }}</h1>
-                                        <h1>Tap Search realktalks</h1>
-                                    {% endif %}
-                                        <div class="clearfix"></div>
-
-                                    </div>
+                                <div class="mt-4 text-center">
+                                    <h4>Search Results For "{{ collection.query }}"</h4>
                                 </div>
-
-
-                                <div class="tab-content">
-                                <div class="tab-pane active" id="realtalks">
-                                    <h1>{{ realtalks }}</h1>
-                                    {% if realtalks|length > 0  %}
+                                <div class="tab-pane active" id="{{ collection.col_id }}">
+                                    {% if collection.results %}
                                     <div class="row">
                                         <div class="col-md">
-                                            {% for _, result_data in realtalks.items() %}
+                                            {% for _, result_data in collection.results.items() %}
                                             <div class="search-item">
                                                 <div class="row">
                                                     <div class="col-1">
@@ -122,7 +70,7 @@
                                         <div class="col-md-3">
                                             <h2>Relevant Docs</h1>
                                             <br>
-                                            {% for _, result_data in doc_results.items() %}
+                                            {% for _, result_data in collection.doc_results.items() %}
                                             <div class="search-item">
                                                 <div class="row">
                                                     <div class="col-2 ms-0 ps-0">
@@ -138,14 +86,15 @@
                                             </div>
                                             {% endfor %}
                                         </div>
-                                    </div>
                                     {% else %}
-                                        <h1>{{ doc_results.metadata }}</h1>
-                                        <h1>Tap Search realktalks</h1>
+                                        <h1>{{ collections }}</h1>
                                     {% endif %}
                                         <div class="clearfix"></div>
+
+                                    </div>
                                 </div>
                             </div>
+                            {% endfor %}
                         </div>
                     </div>
                 </div>
