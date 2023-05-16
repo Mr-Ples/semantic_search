@@ -218,7 +218,10 @@ def clean_everything():
     )
     model = SentenceTransformer(constants.EMBEDDING_MODEL)
     done_docs = []
-    for collectio in ['docs', 'realtalks']:
+    for collectio in [
+        # 'docs',
+        'realtalks'
+    ]:
         collection = client.get_collection(name=collectio, embedding_function=lambda text: model.encode(text))
         ids = collection.get()['ids']
         documents = collection.get()['documents']
@@ -226,6 +229,16 @@ def clean_everything():
         metas_new = []
         for idss, meta, docus in zip(ids, metass, documents):
             # meta.update({'context': ''})
+
+            # if meta['page_num'] > 1 and not meta['context']:
+            #     print(meta['link'])
+
+            print(meta['context'])
+            if meta['context'].startswith(". "):
+                print('removing something')
+                meta['context'] = meta['context'][3:]
+                print(meta['context'])
+
             doc_name = meta['doc_name']
 
             removes = ['Evaluation Only. Created with Aspose.Words. Copyright 2003-2023 Aspose Pty',
@@ -263,4 +276,5 @@ def clean_everything():
         # print([elem['doc_name'] for elem in collection.get(include=["metadatas"])])
 
 if __name__ == "__main__":
-    main()
+    # main()
+    clean_everything()
