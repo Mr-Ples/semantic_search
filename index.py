@@ -87,7 +87,7 @@ def search():
         cache.set(selected_collection, datas[selected_collection])
         cache.set(request.query_string, datas[selected_collection])
 
-    return render_template('search.html', collections=[datas.get(collect.lower().replace(" ", '')) for collect in constants.COLLECTIONS])
+    return render_template('search.html', collections=[datas.get(collect.lower().replace(" ", '')) for collect in constants.COLLECTIONS], query=query)
 
 
 @app.route('/')
