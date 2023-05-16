@@ -43,10 +43,10 @@
                             </ul>
                             {% for collection in collections %}
                             <div class="tab-content">
-                                <div class="mt-4 text-center">
-                                    <h4>Search Results For "{{ collection.query }}"</h4>
-                                </div>
                                 <div class="tab-pane active" id="{{ collection.col_id }}">
+                                    <div class="mt-4 text-center">
+                                        <h4>Search Results For "{{ collection.query }}"</h4>
+                                    </div>
                                     {% if collection.results %}
                                     <div class="row">
                                         <div class="col-md">
@@ -68,7 +68,7 @@
                                             {% endfor %}
                                         </div>
                                         <div class="col-md-3">
-                                            <h2>Relevant Docs</h1>
+                                            <h1>Relevant Docs</h1>
                                             <br>
                                             {% for _, result_data in collection.doc_results.items() %}
                                             <div class="search-item">
