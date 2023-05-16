@@ -35,14 +35,14 @@ def main(query: List[str], collection: str):
             continue
         doc_type = datasss['metadata']['doc_type']
         documents[doc_id] = {'header': datasss['metadata']['doc_name'], 'link': f'https://docs.google.com/{doc_type}/d/' + doc_id}
-    for idd, docuss in documents.items():
-        print(docuss)
+    # for idd, docuss in documents.items():
+    #     print(docuss)
 
     # print(datas)
     # print(documents)
     # get all revelant pages
     for idd, datasss in datas.items():
-        print(datasss)
+        # print(datasss)
         page = idd.split("-")[-1]
         doc_id = idd[:-len('-' + page)]
         print(doc_id)
@@ -52,7 +52,7 @@ def main(query: List[str], collection: str):
         print("Page:", page)
         print("Url:", datasss['metadata']['link'])
         print("Distance:", datasss['distance'])
-        print(datasss['text'][:100])
+        # print(datasss['text'][:100])
     # print(documents)
     return datas, documents
 
