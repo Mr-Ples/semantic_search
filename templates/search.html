@@ -46,8 +46,8 @@
 
                             <div class="tab-content">
                                 <div class="tab-pane active" id="docs">
-                                    <h1>{{ results[1] }}</h1>
-                                    {% if results[1].metadata %}
+                                    <h1>{{ results }}</h1>
+                                    {% if results.metadata %}
                                     <div class="row">
                                         <div class="col-md">
                                             {% for _, result_data in results.items() %}
@@ -87,7 +87,7 @@
                                             {% endfor %}
                                         </div>
                                     {% else %}
-                                        <h1>{{ results[1] }}</h1>
+                                        <h1>{{ results }}</h1>
                                         <h1>Tap Search realktalks</h1>
                                     {% endif %}
                                         <div class="clearfix"></div>
@@ -98,8 +98,8 @@
 
                                 <div class="tab-content">
                                 <div class="tab-pane active" id="realtalks">
-                                    <h1>{{ doc_results[1] }}</h1>
-                                    {% if doc_results[1].metadata %}
+                                    <h1>{{ doc_results }}</h1>
+                                    {% if doc_results.metadata %}
                                     <div class="row">
                                         <div class="col-md">
                                             {% for _, result_data in doc_results.items() %}
@@ -140,7 +140,7 @@
                                         </div>
                                     </div>
                                     {% else %}
-                                        <h1>{{ doc_results[1].metadata }}</h1>
+                                        <h1>{{ doc_results.metadata }}</h1>
                                         <h1>Tap Search realktalks</h1>
                                     {% endif %}
                                         <div class="clearfix"></div>
