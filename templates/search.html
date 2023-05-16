@@ -90,22 +90,49 @@
                                 </div>
 
 
-                                <div class="tab-pane" id="realtalks">
-                                    <h1>Tap Search</h1>
-                                    <!-- {% for _, result_data in doc_results.items() %}
-                                    <div class="search-item">
-                                        <div class="row">
-                                            <div class="col-1">
-                                                <img src="{{ url_for('static', filename='images/document.png') }}" alt="Generic placeholder image" height="54">
+                                <div class="tab-content">
+                                <div class="tab-pane active" id="realtalks">
+                                    <div class="row">
+                                        <div class="col-md">
+                                            {% for _, result_data in doc_results.items() %}
+                                            <div class="search-item">
+                                                <div class="row">
+                                                    <div class="col-1">
+                                                        <img src="{{ url_for('static', filename='images/document.png') }}" alt="Generic placeholder image" height="54">
+                                                    </div>
+                                                    <div class="col">
+                                                        <h4 class="mb-1"><a href="{{ result_data.metadata.link }}">{{ result_data.metadata.doc_name }} - {{ result_data.metadata.header }}</a></h4>
+                                                        <div class="font-13 text-success mb-3">{{ result_data.metadata.link }}</div>
+                                                    </div>
+                                                </div>
+
+
+                                                <p class="mb-0 text-muted">{{ result_data.metadata.context }}</p>
                                             </div>
-                                            <div class="col">
-                                                <h4 class="mb-1"><a href="{{ result_data.link }}">{{ result_data.header }}</a></h4>
-                                                <div class="font-13 text-success mb-3">{{ result_data.link }}</div>
-                                            </div>
+                                            {% endfor %}
                                         </div>
+                                        <div class="col-md-3">
+                                            <h2>Relevant Docs</h1>
+                                            <br>
+                                            {% for _, result_data in doc_results.items() %}
+                                            <div class="search-item">
+                                                <div class="row">
+                                                    <div class="col-2 ms-0 ps-0">
+                                                        <img src="{{ url_for('static', filename='images/document.png') }}" alt="Generic placeholder image" height="54", style="max-width: 30px; max-height: 30px;">
+                                                    </div>
+
+                                                    <div class="col">
+                                                        <h4 class="mb-1"><a href="{{ result_data.link }}">{{ result_data.header }}</a></h4>
+                                                        <!-- <div class="font-13 text-success mb-3">{{ result_data.link }}</div> -->
+                                                    </div>
+                                                </div>
+                                                <!-- <p class="mb-0 text-muted">{{ result_data.text }}</p> -->
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                        <div class="clearfix"></div>
+
                                     </div>
-                                    {% endfor %} -->
-                                    <div class="clearfix"></div>
                                 </div>
                             </div>
                         </div>
