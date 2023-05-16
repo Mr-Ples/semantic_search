@@ -43,7 +43,11 @@
                             </ul>
                             <div class="tab-content">
                                 {% for collection in collections %}
+                                {% if collection.selected %}
                                 <div class="tab-pane active" id="{{ collection.col_id }}">
+                                {% else %}
+                                <div class="tab-pane" id="{{ collection.col_id }}">
+                                {% endif %}
                                     <div class="mt-4 text-center">
                                         <h4>Search Results For "{{ collection.query }}"</h4>
                                     </div>
