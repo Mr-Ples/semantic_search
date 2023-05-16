@@ -5,7 +5,7 @@ pkill -9 -f index.py
 pkill -9 -f jprq
 
 # Start the Python server and redirect its output to a file
-nohup /usr/bin/python index.py  &
+nohup /usr/bin/python3 index.py  &
 
 # Wait for the server to start up
 sleep 5
