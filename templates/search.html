@@ -32,9 +32,9 @@
                             <ul class="nav nav-tabs tabs-bordered">
                                 {% for collection in collections %}
                                 {% if collection.selected %}
-                                <li class="nav-item"><a id="{{ collection.col_id }}" href="#{{ collection.col_id }}" data-toggle="tab" aria-expanded="true" class="nav-link active">{{ collection.col_name }} <span class="badge badge-success ml-1">{{ collection.nr_results }}</span></a></li>
+                                <li class="nav-item"><a id="{{ collection.col_id }}" href="#{{ collection.tab_id }}" data-toggle="tab" aria-expanded="true" class="nav-link active">{{ collection.col_name }} <span class="badge badge-success ml-1">{{ collection.nr_results }}</span></a></li>
                                 {% else %}
-                                <li class="nav-item"><a id="{{ collection.col_id }}" href="#{{ collection.col_id }}" data-toggle="tab" aria-expanded="false" class="nav-link">{{ collection.col_name }} <span class="badge badge-success ml-1">{{ collection.nr_results }}</span></a></li>
+                                <li class="nav-item"><a id="{{ collection.col_id }}" href="#{{ collection.tab_id }}" data-toggle="tab" aria-expanded="false" class="nav-link">{{ collection.col_name }} <span class="badge badge-success ml-1">{{ collection.nr_results }}</span></a></li>
                                 {% endif %}
 
                                 {% endfor %}
@@ -44,9 +44,9 @@
                             <div class="tab-content">
                                 {% for collection in collections %}
                                 {% if collection.selected %}
-                                <div class="tab-pane active" id="{{ collection.col_id }}">
+                                <div class="tab-pane active" id="{{ collection.tab_id }}">
                                 {% else %}
-                                <div class="tab-pane" id="{{ collection.col_id }}">
+                                <div class="tab-pane" id="{{ collection.tab_id }}">
                                 {% endif %}
                                     <div class="mt-4 text-center">
                                         <h4>Search Results For "{{ collection.query }}"</h4>

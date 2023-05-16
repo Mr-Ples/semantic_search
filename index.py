@@ -68,7 +68,7 @@ def search():
     print(request.query_string)
 
     datas = {collect.lower().replace(" ", ''): cache.get(collect.lower().replace(" ", '')) or {} for collect in constants.COLLECTIONS}
-    [datas[collect.lower().replace(" ", '')].update({'selected': False, 'col_id': collect.lower().replace(" ", ''), 'col_name': collect}) for collect in constants.COLLECTIONS]
+    [datas[collect.lower().replace(" ", '')].update({'selected': False, 'col_id': collect.lower().replace(" ", ''), 'col_name': collect, 'tab_id': collect.lower().replace(" ", '') + "y"}) for collect in constants.COLLECTIONS]
 
     if not request.query_string:
         return render_template('search.html', collections=[datas.get(collect.lower().replace(" ", '')) for collect in constants.COLLECTIONS])
