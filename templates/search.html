@@ -46,11 +46,11 @@
 
                             <div class="tab-content">
                                 <div class="tab-pane active" id="docs">
-                                    <h1>{{ results }}</h1>
-                                    {% if results|length > 0  %}
+                                    <h1>{{ docs }}</h1>
+                                    {% if docs|length > 0  %}
                                     <div class="row">
                                         <div class="col-md">
-                                            {% for _, result_data in results.items() %}
+                                            {% for _, result_data in docs.items() %}
                                             <div class="search-item">
                                                 <div class="row">
                                                     <div class="col-1">
@@ -98,11 +98,11 @@
 
                                 <div class="tab-content">
                                 <div class="tab-pane active" id="realtalks">
-                                    <h1>{{ doc_results }}</h1>
-                                    {% if doc_results|length > 0  %}
+                                    <h1>{{ realtalks }}</h1>
+                                    {% if realtalks|length > 0  %}
                                     <div class="row">
                                         <div class="col-md">
-                                            {% for _, result_data in doc_results.items() %}
+                                            {% for _, result_data in realtalks.items() %}
                                             <div class="search-item">
                                                 <div class="row">
                                                     <div class="col-1">

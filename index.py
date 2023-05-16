@@ -84,23 +84,26 @@ def search():
                 collect_data.append((collect, False))
         return collect_data
 
+    datas = {}
     print("search", request.method)
     print(request.__dict__)
     print(request.query_string)
     if not request.query_string:
-        return render_template('search.html', query='Search', results=cache.get('docs') or {}, nr_results=0, doc_results=cache.get('realtalks') or {}, nr_doc_results=0, collections=pack_collection())
+        return render_template('search.html', docs={}, realtalks={}, collections=pack_collection())
     query = str(request.query_string.decode('ascii')).split('&')[0]
     collection = unquote(str(request.query_string.decode('utf-8')).split('&')[-1])
     query = base64.b64decode(query).decode('ascii')
     print(query, collection.lower().replace(" ", ''))
 
     if cache.get(request.query_string):
-        results, doc_results = cache.get(request.query_string)
+        datas[collection.lower().replace(" ", '')] = cache.get(request.query_string)
     else:
         results, doc_results = semantic_search([query], collection.lower().replace(" ", ''))
-        cache.set(request.query_string, (results, doc_results))
-        cache.set(collection.lower().replace(" ", ''), (results, doc_results))
-    return render_template('search.html', query=query, results=results or cache.get('docs'), nr_results=len(results), doc_results=doc_results or cache.get('realtalks'), nr_doc_results=len(doc_results), collections=pack_collection(collection))
+        datas[collection.lower().replace(" ", '')] = dict(query=query, results=results, nr_results=len(results), doc_results=doc_results, nr_doc_results=len(doc_results))
+        cache.set(collection.lower().replace(" ", ''), datas[collection.lower().replace(" ", '')])
+        cache.set(request.query_string, datas[collection.lower().replace(" ", '')])
+
+    return render_template('search.html', docs=datas.get('docs') or {}, realtalks=datas.get('realtalks') or {}, collections=pack_collection(collection))
 
 
 @app.route('/')
