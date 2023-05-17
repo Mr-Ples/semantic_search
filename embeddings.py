@@ -21,56 +21,6 @@ from drive_downloader import (
 )
 
 
-def get_file_name(peth):
-    current_path = ''
-    for index, part in enumerate(peth.split('/')):
-        if not index:
-            current_path = os.path.join(current_path, part)
-            continue
-        if os.path.exists(os.path.join(current_path, part)) and '.docx' not in part:
-            current_path = os.path.join(current_path, part)
-            continue
-        else:
-            return peth.replace(current_path + '/', '').replace('.docx', '')
-
-
-def get_page_links(docx_text, header_data):
-    for url, data in header_data.items():
-        clean_context = ''.join(e for e in data['context'].lower() if e.isalnum())
-        clean_text = ''.join(e for e in docx_text.lower() if e.isalnum())
-        if clean_context in clean_text:
-            # print(docx_text)
-            print(data['context'])
-            print()
-            print(clean_context)
-            print()
-            print(data['name'])
-            print(url)
-            return url, data['context'], data['name']
-    return None, None, None
-
-
-def read_headers(docx_file):
-    document = Document(docx_file)
-    headers_data = []
-
-    for section in document.sections:
-        # print(section.__dict__)
-        # print(section.header.__dict__)
-        # header = section.header
-        for paragraph in section.paragraphs:
-            print(paragraph.__dir__())
-            headers_data.append(paragraph.text)
-
-    return headers_data
-
-
-# headers_data = read_headers(docx_file)
-#
-# for header, text in headers_data:
-#     print(f"Header: {_}, Text: {text}")
-
-# exit()
 def main():
     print()
     print('Getting document datas')
@@ -115,13 +65,6 @@ def main():
             if name.endswith('(1).pdf'):
                 continue
             doc_type = 'document'
-
-            # print(''.join(e for e in name if e.isalnum()))
-            for nameall, idall in all:
-                # print(''.join(e for e in nameall if e.isalnum()))
-                if ''.join(e for e in nameall if e.isalnum()).lower() == ''.join(e for e in name if e.isalnum()).replace("pdf", '').lower():
-                    doc_id = idall
-                    name = nameall
 
             if not doc_id:
                 doc_id = find_document_id(name.replace(".docx", "").replace(".pdf", ""), constants.REALTALKS_DRIVE_FOLDER_ID)
@@ -200,12 +143,11 @@ def main():
             persist_directory=constants.CHROMA_PERSIST_DIR
         )
     )
-    # # client.reset()
     model = SentenceTransformer(constants.EMBEDDING_MODEL)
     # client.delete_collection('realtalks')
     collection = client.get_or_create_collection(name='realtalks', embedding_function=lambda text: model.encode(text))
     print("BEFORE: ", collection.count())
-    collection.add(
+    collection.upsert(
         # embeddings=[elem[0] for elem in embeddings_data],
         documents=[elem[1] for elem in embeddings_data],
         metadatas=[elem[2] for elem in embeddings_data],
