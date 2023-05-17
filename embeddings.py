@@ -187,11 +187,8 @@ def get_new_podcast_links():
                 links.append(info['webpage_url'])
     print("Missing podcast links=", links)
     print()
-    print(
-        "Use the following command in the podcasts notebook (found here: https://colab.research.google.com/drive/13H634_YzqIUPZg7cOyb9YMDTU62GfUm0?usp=sharing):\n\n\t\t\t!youtube-dl --playlist-end 2 --write-info-json --no-overwrites -c --ignore-errors --output 'drive/MyDrive/podcasts/%(id)s_%(title)s.mp3' " + " ".join(
-            links
-        )
-        )
+    print("Use the following command in the podcasts notebook (found here: https://colab.research.google.com/drive/13H634_YzqIUPZg7cOyb9YMDTU62GfUm0?usp=sharing):"
+        "\n\n\t\t\t!youtube-dl --playlist-end 2 --write-info-json --no-overwrites -c --ignore-errors --output 'drive/MyDrive/podcasts/%(id)s_%(title)s.mp3' " + " ".join(links))
 
 
 def clean_everything():
