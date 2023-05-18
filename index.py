@@ -79,7 +79,12 @@ def search():
     # ghetto auth
     auth_token = session.get('auth_token')
     if selected_collection != 'realtalks':
+        cache.set("request_path", request.path)
         if not auth_token:
+            return redirect("/login")
+
+        resp = oauth.get(GITLAB_USER_INFO_URL).json()
+        if isinstance(resp, str):
             return redirect("/login")
 
     if cache.get(request.query_string):
