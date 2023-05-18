@@ -79,7 +79,7 @@ def search():
     # ghetto auth
     auth_token = session.get('auth_token')
     if selected_collection != 'realtalks':
-        cache.set("request_path", request.path + request.query_string)
+        cache.set("request_path", request.path + '?' + request.query_string.decode('utf-8'))
         if not auth_token:
             return redirect("/login")
 
