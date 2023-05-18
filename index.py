@@ -1,8 +1,10 @@
 import base64
 import os
+import time
 import traceback
 from functools import wraps
 from urllib.parse import unquote
+
 import requests
 from flask import (
     redirect,
@@ -15,8 +17,6 @@ from requests_oauthlib import OAuth2Session
 
 import constants
 from semantic_search import main as semantic_search
-
-# from flask_lt import run_with_lt
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
@@ -35,30 +35,41 @@ GITLAB_USER_INFO_URL = "https://gitlab.com/api/v4/user"
 oauth = OAuth2Session(GITLAB_CLIENT_ID, redirect_uri=GITLAB_REDIRECT_URI)
 
 
-# run_with_lt(
-#     app,
-#     # subdomain='semantic-search-bro-bro'
-# )
-
 def token_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        return f(*args, **kwargs)
+        auth_token = session.get('auth_token')
+        if auth_token:
+            resp = oauth.get(GITLAB_USER_INFO_URL).json()
+            if not isinstance(resp, str):
+                return f(*args, **kwargs)
+            return redirect("/login")
+        return redirect("/login")
+
     return decorated_function
 
 
-
 @app.route('/search', methods=['GET', 'POST'])
-@token_required
 def search():
     print("search", request.method)
     print(request.__dict__)
     print(request.query_string)
     query = str(request.query_string.decode('ascii')).split('&')[0]
-    collection = unquote(str(request.query_string.decode('utf-8')).split('&')[-1])
+    collection = unquote(str(request.query_string.decode('utf-8')).split('&')[-1]).lower().replace(" ", '')
     query = base64.b64decode(query).decode('ascii')
-    print(query, collection.lower().replace(" ", ''))
-    results, doc_results = semantic_search([query], collection.lower().replace(" ", ''))
+    print(query, collection)
+
+    # ghetto auth
+    auth_token = session.get('auth_token')
+    if collection != 'realtalks':
+        if not auth_token:
+            return redirect("/login")
+
+        resp = oauth.get(GITLAB_USER_INFO_URL).json()
+        if isinstance(resp, str):
+            return redirect("/login")
+
+    results, doc_results = semantic_search([query], collection)
     collect_data = []
     for collect in constants.COLLECTIONS:
         print(collect, collection, collection in collect)
@@ -68,8 +79,8 @@ def search():
             collect_data.append((collect, False))
     return render_template('search.html', query=query, results=results, nr_results=len(results), doc_results=doc_results, nr_doc_results=len(doc_results), collections=collect_data)
 
+
 @app.route('/')
-@token_required
 def root():
     print("Root", request.method)
     print(request.__dict__)
@@ -111,9 +122,14 @@ def callback():
 
 
 if __name__ == '__main__':
-    app.run(
-        host="0.0.0.0",
-        port=8089,
-        # debug=True,
-        # use_reloader=True
-    )
+    while True:
+        try:
+            app.run(
+                host="0.0.0.0",
+                port=8089,
+                # debug=True,
+                # use_reloader=True
+            )
+        except:
+            traceback.print_exc()
+            time.sleep(5)
