@@ -82,9 +82,13 @@ def search():
         cache.set("request_path", request.path + '?' + request.query_string.decode('utf-8'))
         if not auth_token:
             return redirect("/login")
+        try:
+            resp = oauth.get(GITLAB_USER_INFO_URL).json()
 
-        resp = oauth.get(GITLAB_USER_INFO_URL).json()
-        if isinstance(resp, str):
+            if isinstance(resp, str):
+                return redirect("/login")
+        except:
+            traceback.print_exc()
             return redirect("/login")
 
     if cache.get(request.query_string):
