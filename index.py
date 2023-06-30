@@ -1,4 +1,5 @@
 import base64
+import threading
 import os
 import time
 import traceback
@@ -165,13 +166,17 @@ def callback():
             return "User not a member of the CoS Search or CoS Documentation projects", 403
         return "User not a member of the CoS Search or CoS Documentation projects", 403
 
-
+PORT = 8039
 if __name__ == '__main__':
     while True:
         try:
+            thread = threading.Timer(5, lambda: os.system(f'jprq http {PORT} -s "semantic-search"'))
+            thread.start()
+            # thread = threading.Timer(5, lambda: print('hello'))
+            # thread.start()
             app.run(
                 host="0.0.0.0",
-                port=8089,
+                port=PORT,
                 # debug=True,
                 # use_reloader=True
             )

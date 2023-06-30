@@ -9,3 +9,4 @@ requests
 jprq
 requests_oauthlib
 flask-caching
+sentence-transformers
